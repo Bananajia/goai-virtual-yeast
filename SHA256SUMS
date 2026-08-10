@@ -82,7 +82,7 @@ a2d2f36b2529892f954ef8dee176f5e1044c5097021c9402ea4942f2807b1d32  ./research_cod
 35e6b862c4ec6f0526a26fe87e97919e7149c14664534174f8ef0ee2adc653b6  ./research_code/pyproject.toml
 87dc3d915f233f00f44c18ac48f519402d59da260d80487acf66d887e9a814dd  ./research_code/reporting/__init__.py
 18860c51c5d3905a58d6f6eeb2fe601e265ed138b8543630921f104409ee616f  ./research_code/reporting/writer.py
-661bd44e11501c0de5e4c12b6bcd5194a401089dbefe4b34809ede842349151c  ./research_code/reports/meeting-audit-20260810/REPORT.md
+cdd7c376adb488a038687e00cbc546158d6a5433b9f843ff5e69622b48928c36  ./research_code/reports/meeting-audit-20260810/REPORT.md
 57f8f4cca37e4f6909780ddbf2d3861381678b44c53908581eb802c2996c9d5c  ./research_code/reports/public-rna-local-ollama-qwen3-six/REPORT.md
 9de4f9ab7c918b0b533149180380699687688a58ec385d0612be05f9fbf87c32  ./research_code/reports/public-rna-local-ollama-qwen3-six/RESULTS.json
 8735dfe374dd6bdab8f164294b08ffeefd43487c623890b3f8101f6fd5c251ac  ./research_code/reports/public-rna-local-ollama-qwen3-smoke/REPORT.md
