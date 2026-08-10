@@ -298,7 +298,7 @@
       "status": "VALIDATED_REJECTED",
       "golden": true,
       "source": {"root": "documents", "path": "research_code/evidence/structure-generalization-v1/RESULTS.md", "kind": "aggregate_markdown"},
-      "source_sha256": "147d69d34b244d912dacd29076f7521cc65719d1b07936c2facc03016d4cda8b",
+      "source_sha256": "fcea1fc02bf44b1095653a51c24c17fea602ab1ea63a4211b00743045beff4d1",
       "replacement": null,
       "validity": "Aggregate-only evidence from an independently replayed 384-coordinate, train-only grouped-OOD structure pilot. The 37-drug all-ITT analysis includes 22 strict ChEBI largest-fragment canonical-isomeric parents and 15 explicit missing fallbacks. Tanimoto transfer, CPA-style additive Ridge, and low-rank structure-context bilinear Ridge are all rejected for promotion. The Adapter verifies frozen aggregate scalars and does not retrain the private study or claim an exact CPA/chemCPA reproduction.",
       "persistence": "PERSISTENT_RELEASE_SAFE",
