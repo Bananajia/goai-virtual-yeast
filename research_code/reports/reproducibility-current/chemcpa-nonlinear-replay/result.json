@@ -8,14 +8,14 @@
   "counts": {
     "records_blocked": 0,
     "records_failed": 0,
-    "records_passed": 22,
-    "records_requested": 22
+    "records_passed": 1,
+    "records_requested": 1
   },
   "metrics": {
     "evidence_replay_pass_rate": 1.0,
-    "metrics_verified": 75.0
+    "metrics_verified": 22.0
   },
-  "name": "legacy_evidence_replay",
+  "name": "chemcpa_nonlinear_evidence",
   "notes": [
     "Legacy evidence was replayed from aggregate documents only.",
     "No competition matrix, identity, prediction or protein vector was read."

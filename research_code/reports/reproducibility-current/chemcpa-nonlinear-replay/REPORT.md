@@ -1,4 +1,4 @@
-# legacy_evidence_replay
+# chemcpa_nonlinear_evidence
 
 Status: `GOVERNANCE`
 
@@ -7,7 +7,7 @@ Status: `GOVERNANCE`
 | Metric | Value |
 |---|---:|
 | `evidence_replay_pass_rate` | 1.000000 |
-| `metrics_verified` | 75.000000 |
+| `metrics_verified` | 22.000000 |
 
 ## Provenance
 

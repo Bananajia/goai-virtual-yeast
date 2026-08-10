@@ -36,8 +36,9 @@ The pipeline runs in this order:
 12. `SubmissionContract` validates exact sample IDs, official feature names and
     order, finite values, and `log2` scale before writing `prediction.csv`.
 
-The source matrix contains 5,243 protein coordinates. The interpretation
-material's strict 80% rule reports 4,232 modeled coordinates; the historical
-inclusive experiment reported 4,422. The final submission columns and order are
-always taken from the latest official feature contract rather than inferred from
-either count.
+The source matrix contains 5,243 protein coordinates. Applying the stated
+train-only strict rule to the current release gives 4,422 modeled coordinates
+and zero proteins exactly at 80% missingness, so `<0.80` and `<=0.80` select the
+same panel. The interpretation PDF's reported 4,232 cannot be reproduced by its
+shown formula on this release and is not a machine constant. Final submission
+columns and order always come from the latest official feature contract.

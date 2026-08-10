@@ -18,13 +18,16 @@ Verdict: **PASS WITH DECLARED EXTERNAL DEPENDENCIES**
   submission ID/feature/log2/finite contracts have dedicated negative tests.
 - Aggregate reporting validates scalar metrics, non-negative counts, boolean
   contracts, portable provenance and safe notes before atomic output.
-- Full research archive: 76/76 unified tests passed. Clean public checkout:
-  73 passed and three optional historical-evidence replay tests skipped.
-- 73 Python files compiled.
+- Full research archive: 81/81 unified tests passed. The final clean public
+  checkout discovered the same 81 tests: 78 passed and 3 optional
+  missing-history tests skipped explicitly.
+- 76 Python files compiled.
 - `uv lock --check` resolved 27 packages.
-- 17 experiments are discoverable through the common CLI.
-- 19/19 persistent evidence records and 30/30 frozen metrics replayed; zero
+- 20 experiments are discoverable through the common CLI.
+- 22/22 golden evidence records and 75/75 frozen metrics replayed; zero
   invalidated records were accepted as golden.
+- In the clean release, the three bundled aggregate Adapters replayed 3/3
+  records and 45/45 frozen scalars.
 - Fixed-seed synthetic mean/Ridge results match the saved artifacts.
 - The offline public RNA result is deterministic.
 - The local Qwen six-case pilot correctly returned `BLOCKED` after invalid

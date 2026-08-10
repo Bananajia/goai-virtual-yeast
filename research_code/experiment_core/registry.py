@@ -8,6 +8,7 @@ from experiments.synthetic_metadata_ridge import SyntheticMetadataRidge
 from experiments.legacy_evidence_replay import build_experiment as build_legacy_replay
 from experiments.public_rna_lincs_mini import PublicRnaLincsMiniExperiment
 from experiments.conditional_uncertainty import build_experiment as build_uncertainty
+from experiments.chemcpa_nonlinear import build_experiment as build_chemcpa_nonlinear
 from experiments.control_affine_pairwise import build_experiment as build_control_affine
 from experiments.drug_target_localnet import build_experiment as build_drug_localnet
 from experiments.external_knowledge_transformer import build_experiment as build_transformer
@@ -15,10 +16,14 @@ from experiments.fair_architecture import build_experiment as build_fair_archite
 from experiments.functional_multihead import build_experiment as build_multihead
 from experiments.latent_dynamics import build_experiment as build_latent_dynamics
 from experiments.local_llm_mechanism import build_experiment as build_local_llm
+from experiments.loss_ablation import build_experiment as build_loss_ablation
 from experiments.multiobjective_highresponse import build_experiment as build_multiobjective
 from experiments.named_pathway_tokens import build_experiment as build_named_pathways
 from experiments.static_prefix import build_experiment as build_static_prefix
 from experiments.strain_genome_cnv import build_experiment as build_strain_genome
+from experiments.structure_generalization import (
+    build_experiment as build_structure_generalization,
+)
 from experiments.threshold_policy import build_experiment as build_threshold_policy
 
 
@@ -46,11 +51,14 @@ class ExperimentRegistry:
                 build_multihead(),
                 build_latent_dynamics(),
                 build_multiobjective(),
+                build_loss_ablation(),
                 build_uncertainty(),
                 build_local_llm(),
                 build_named_pathways(),
                 build_drug_localnet(),
                 build_strain_genome(),
+                build_structure_generalization(),
+                build_chemcpa_nonlinear(),
                 build_static_prefix(),
                 build_threshold_policy(),
             )

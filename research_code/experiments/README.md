@@ -15,6 +15,20 @@ There are three types:
    frozen aggregate source hash and expected result. They do not pretend to
    retrain when historical per-sample predictions were intentionally not saved.
 
+`loss_ablation.py` is one such aggregate-only Adapter. It verifies the release-safe
+MSE/Huber/response-weighted-loss summary under `../evidence/loss-ablation-v1/`;
+the clean package does not claim to retrain that private 384-coordinate pilot.
+`structure_generalization.py` applies the same boundary to the independently
+validated Tanimoto, CPA-style additive and structure-context bilinear pilot under
+`../evidence/structure-generalization-v1/`. It verifies only release-safe
+all-ITT/coverage aggregates and never loads chemical identities or private
+predictions.
+`chemcpa_nonlinear.py` replays one combined release-safe record for the nonlinear
+composition v1/v2 pilots under `../evidence/chemcpa-nonlinear-v1-v2/`. V1 is a
+measured-control conditional diagnostic; v2 is a no-control development
+follow-up. The molecular branch is rejected, C0 remains research-only, and the
+Adapter does not claim an exact CPA/chemCPA reproduction or private retraining.
+
 List all registered experiments:
 
 ```bash

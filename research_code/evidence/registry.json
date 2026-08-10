@@ -27,7 +27,7 @@
       "source": {"root": "documents", "path": "reports/complete-research-report-v9/artifact.json", "kind": "aggregate_json"},
       "source_sha256": "4626aa97ffcd377241fb807bfa4c1694ff049ef698702aadc767f56a25806dde",
       "replacement": null,
-      "validity": "Frozen historical inclusive-mask evidence for the train-mean sanity baseline and metadata Ridge core; the pooled-control Raw-FC value remains exploratory, and the 4,422 count is not the official strict <80% panel.",
+      "validity": "Frozen current-release 4,422-coordinate evidence for the train-mean sanity baseline and metadata Ridge core; the pooled-control Raw-FC value remains exploratory. Independent replay found zero coordinates exactly at 80% missingness, so strict <80% and <=80% select the same panel on this release; the interpretation PDF's 4,232 count is not reproducible from its stated formula.",
       "expected_aggregate_metrics": [
         {"name": "mean_baseline_validation_flattened_pearson", "value": 0.9410907706567551, "tolerance": 1e-15, "locator": {"kind": "json_pointer", "pointer": "/snapshot/datasets/round1_mean_baseline/4/flattened_pearson"}},
         {"name": "mean_baseline_validation_flattened_r2", "value": 0.8856385477767921, "tolerance": 1e-15, "locator": {"kind": "json_pointer", "pointer": "/snapshot/datasets/round1_mean_baseline/4/flattened_r2"}},
@@ -35,7 +35,7 @@
         {"name": "mean_baseline_validation_condition_variance_ratio", "value": 0.0, "tolerance": 0, "locator": {"kind": "json_pointer", "pointer": "/snapshot/datasets/round1_mean_baseline/4/condition_variance_ratio"}},
         {"name": "metadata_ridge_endpoint_pcc", "value": 0.9851453236882924, "tolerance": 1e-15, "locator": {"kind": "json_pointer", "pointer": "/snapshot/datasets/headline/0/endpoint_pcc"}},
         {"name": "metadata_ridge_pooled_exploratory_raw_fc_pcc", "value": 0.326277750247267, "tolerance": 1e-15, "locator": {"kind": "json_pointer", "pointer": "/snapshot/datasets/headline/0/raw_fc_pcc"}},
-        {"name": "historical_inclusive_eighty_percent_modeled_proteins", "value": 4422, "tolerance": 0, "locator": {"kind": "json_pointer", "pointer": "/snapshot/datasets/headline/0/modeled_proteins"}},
+        {"name": "current_release_strict_eighty_percent_modeled_proteins", "value": 4422, "tolerance": 0, "locator": {"kind": "json_pointer", "pointer": "/snapshot/datasets/headline/0/modeled_proteins"}},
         {"name": "historical_source_matrix_width", "value": 5243, "tolerance": 0, "locator": {"kind": "json_pointer", "pointer": "/snapshot/datasets/headline/0/full_panel_proteins"}}
       ]
     },
@@ -190,9 +190,9 @@
       "source": {"root": "documents", "path": "experiments/threshold-control-calibration-v1/RESULTS.md", "kind": "aggregate_markdown"},
       "source_sha256": "1e2a702878640dbf6799ca7dfb83c3ef1f05b0f3f1672cee74e2b4bd5bf1e074",
       "replacement": "control-affine-fullpanel-v2-pairwise",
-      "validity": "Only historical inclusive-mask structural counts, coordinate coverage and exact-key matching are valid; all response-based threshold and calibration evidence is invalidated, and 4,422 is not the official strict panel.",
+      "validity": "Only structural counts, coordinate coverage and exact-key matching are valid; all response-based threshold and calibration evidence is invalidated. On the current release strict <80% and <=80% both select 4,422 coordinates because there are zero exact-boundary ties.",
       "expected_aggregate_metrics": [
-        {"name": "historical_inclusive_eighty_percent_modeled_coordinates", "value": 4422, "tolerance": 0, "locator": {"kind": "regex", "pattern": "\\| \\*\\*80%\\*\\* \\| \\*\\*(?P<value>4,422)\\*\\*"}}
+        {"name": "current_release_eighty_percent_modeled_coordinates", "value": 4422, "tolerance": 0, "locator": {"kind": "regex", "pattern": "\\| \\*\\*80%\\*\\* \\| \\*\\*(?P<value>4,422)\\*\\*"}}
       ]
     },
     {
@@ -271,6 +271,87 @@
       "expected_aggregate_metrics": [
         {"name": "incremental_token_rank_after_strain_onehot", "value": 0, "tolerance": 0, "locator": {"kind": "json_pointer", "pointer": "/identifiability/incremental_token_rank_after_strain_onehot"}},
         {"name": "official_train_numeric_rows_read", "value": 0, "tolerance": 0, "locator": {"kind": "json_pointer", "pointer": "/numeric_boundary/official_train_proteome_numeric_rows_read"}}
+      ]
+    },
+    {
+      "experiment_id": "loss-ablation-v1",
+      "status": "VALIDATED_REJECTED",
+      "golden": true,
+      "source": {"root": "documents", "path": "research_code/evidence/loss-ablation-v1/RESULTS.md", "kind": "aggregate_markdown"},
+      "source_sha256": "47715a866cc5bc1053f3d3c0cc33f1eba28adecc2109df915c3e4c39db45f938",
+      "replacement": null,
+      "validity": "Aggregate-only evidence from a 384-coordinate, train-only grouped-OOF pilot. Huber and fixed fourfold response weighting are rejected as global MSE replacements; the clean adapter verifies frozen scalars but does not retrain the private study. The current-release strict <80% contract is 4,422 coordinates with zero exact-boundary ties.",
+      "persistence": "PERSISTENT_RELEASE_SAFE",
+      "expected_aggregate_metrics": [
+        {"name": "current_release_strict_modeled_coordinates", "value": 4422, "tolerance": 0, "locator": {"kind": "regex", "pattern": "strictly below 80% retains (?P<value>4,422) coordinates"}},
+        {"name": "whole_chemical_weighted_mse_raw_fc_pcc_gain", "value": 0.022086, "tolerance": 1e-12, "locator": {"kind": "regex", "pattern": "\\| Whole chemical \\| Response-weighted MSE \\| (?P<value>\\+0\\.022086) \\|"}},
+        {"name": "whole_chemical_weighted_mse_endpoint_rmse_change", "value": -0.002792, "tolerance": 1e-12, "locator": {"kind": "regex", "pattern": "\\| Whole chemical \\| Response-weighted MSE \\| \\+0\\.022086 \\| 5/5 \\| (?P<value>-0\\.002792) \\|"}},
+        {"name": "whole_kbio_weighted_mse_raw_fc_pcc_gain", "value": 0.006036, "tolerance": 1e-12, "locator": {"kind": "regex", "pattern": "\\| Whole Kbio \\| Response-weighted MSE \\| (?P<value>\\+0\\.006036) \\|"}},
+        {"name": "whole_kbio_weighted_mse_endpoint_rmse_change", "value": 0.005517, "tolerance": 1e-12, "locator": {"kind": "regex", "pattern": "\\| Whole Kbio \\| Response-weighted MSE \\| \\+0\\.006036 \\| 5/5 \\| (?P<value>\\+0\\.005517) \\|"}},
+        {"name": "whole_chemical_weighted_huber_raw_fc_pcc_gain", "value": 0.012847, "tolerance": 1e-12, "locator": {"kind": "regex", "pattern": "\\| Whole chemical \\| Response-weighted Huber \\| (?P<value>\\+0\\.012847) \\|"}},
+        {"name": "whole_kbio_weighted_huber_raw_fc_pcc_gain", "value": 0.007437, "tolerance": 1e-12, "locator": {"kind": "regex", "pattern": "\\| Whole Kbio \\| Response-weighted Huber \\| (?P<value>\\+0\\.007437) \\|"}},
+        {"name": "whole_chemical_real_minus_deranged_raw_fc_pcc", "value": 0.022310, "tolerance": 1e-12, "locator": {"kind": "regex", "pattern": "in all five folds of both scenarios: (?P<value>\\+0\\.022310) for whole chemical"}}
+      ]
+    },
+    {
+      "experiment_id": "structure-generalization-v1",
+      "status": "VALIDATED_REJECTED",
+      "golden": true,
+      "source": {"root": "documents", "path": "research_code/evidence/structure-generalization-v1/RESULTS.md", "kind": "aggregate_markdown"},
+      "source_sha256": "147d69d34b244d912dacd29076f7521cc65719d1b07936c2facc03016d4cda8b",
+      "replacement": null,
+      "validity": "Aggregate-only evidence from an independently replayed 384-coordinate, train-only grouped-OOD structure pilot. The 37-drug all-ITT analysis includes 22 strict ChEBI largest-fragment canonical-isomeric parents and 15 explicit missing fallbacks. Tanimoto transfer, CPA-style additive Ridge, and low-rank structure-context bilinear Ridge are all rejected for promotion. The Adapter verifies frozen aggregate scalars and does not retrain the private study or claim an exact CPA/chemCPA reproduction.",
+      "persistence": "PERSISTENT_RELEASE_SAFE",
+      "expected_aggregate_metrics": [
+        {"name": "current_release_strict_modeled_coordinates", "value": 4422, "tolerance": 0, "locator": {"kind": "regex", "pattern": "strictly below 80% retains[\\s\\n]+\\*\\*(?P<value>4,422)\\*\\* coordinates"}},
+        {"name": "all_itt_treated_drugs", "value": 37, "tolerance": 0, "locator": {"kind": "regex", "pattern": "Treated drug identities in the primary all-ITT analysis: \\*\\*(?P<value>37)\\*\\*"}},
+        {"name": "strict_structure_covered_drugs", "value": 22, "tolerance": 0, "locator": {"kind": "regex", "pattern": "Strict structure coverage: \\*\\*(?P<value>22) covered\\*\\*"}},
+        {"name": "strict_structure_missing_drugs", "value": 15, "tolerance": 0, "locator": {"kind": "regex", "pattern": "\\*\\*22 covered\\*\\*, \\*\\*(?P<value>15) explicit missing/fallback\\*\\*"}},
+        {"name": "whole_chemical_m1_raw_fc_pcc_improvement", "value": -0.00657, "tolerance": 1e-12, "locator": {"kind": "regex", "pattern": "\\| Whole chemical \\| M1 Tanimoto transfer \\| -0\\.00160 \\(0/5\\) \\| -0\\.02176 \\(0/5\\) \\| (?P<value>-0\\.00657) \\(1/5\\) \\|"}},
+        {"name": "whole_chemical_m2_raw_fc_pcc_improvement", "value": -0.01095, "tolerance": 1e-12, "locator": {"kind": "regex", "pattern": "\\| Whole chemical \\| M2 CPA-style additive \\| -0\\.00101 \\(3/5\\) \\| -0\\.01118 \\(3/5\\) \\| (?P<value>-0\\.01095) \\(0/5\\) \\|"}},
+        {"name": "whole_chemical_m2_context_residual_pcc_improvement", "value": 0.00517, "tolerance": 1e-12, "locator": {"kind": "regex", "pattern": "\\| Whole chemical \\| M2 CPA-style additive \\| -0\\.00101 \\(3/5\\) \\| -0\\.01118 \\(3/5\\) \\| -0\\.01095 \\(0/5\\) \\| (?P<value>\\+0\\.00517) \\(3/5\\) \\|"}},
+        {"name": "whole_chemical_m3_raw_fc_pcc_improvement", "value": -0.00998, "tolerance": 1e-12, "locator": {"kind": "regex", "pattern": "\\| Whole chemical \\| M3 structure-context bilinear \\| -0\\.00101 \\(3/5\\) \\| -0\\.01096 \\(3/5\\) \\| (?P<value>-0\\.00998) \\(0/5\\) \\|"}},
+        {"name": "whole_chemical_m3_context_residual_pcc_improvement", "value": 0.00832, "tolerance": 1e-12, "locator": {"kind": "regex", "pattern": "\\| Whole chemical \\| M3 structure-context bilinear \\| -0\\.00101 \\(3/5\\) \\| -0\\.01096 \\(3/5\\) \\| -0\\.00998 \\(0/5\\) \\| (?P<value>\\+0\\.00832) \\(4/5\\) \\|"}},
+        {"name": "whole_kbio_m1_raw_fc_pcc_improvement", "value": -0.08876, "tolerance": 1e-12, "locator": {"kind": "regex", "pattern": "\\| Whole Kbio \\| M1 Tanimoto transfer \\| -0\\.00995 \\(0/5\\) \\| -0\\.13462 \\(0/5\\) \\| (?P<value>-0\\.08876) \\(0/5\\) \\|"}},
+        {"name": "whole_kbio_m2_raw_fc_pcc_improvement", "value": -0.07173, "tolerance": 1e-12, "locator": {"kind": "regex", "pattern": "\\| Whole Kbio \\| M2 CPA-style additive \\| -0\\.00721 \\(0/5\\) \\| -0\\.10054 \\(0/5\\) \\| (?P<value>-0\\.07173) \\(0/5\\) \\|"}},
+        {"name": "whole_kbio_m3_raw_fc_pcc_improvement", "value": -0.07292, "tolerance": 1e-12, "locator": {"kind": "regex", "pattern": "\\| Whole Kbio \\| M3 structure-context bilinear \\| -0\\.00820 \\(0/5\\) \\| -0\\.11430 \\(0/5\\) \\| (?P<value>-0\\.07292) \\(0/5\\) \\|"}},
+        {"name": "covered_m2_vs_permuted_individuality_rmse_improvement", "value": 0.01805, "tolerance": 1e-12, "locator": {"kind": "regex", "pattern": "\\| M2 vs permuted additive \\| \\+0\\.01279 \\| 3/5 \\| (?P<value>\\+0\\.01805) \\|"}},
+        {"name": "independent_fold_rows", "value": 300, "tolerance": 0, "locator": {"kind": "regex", "pattern": "from \\*\\*(?P<value>300)\\*\\* fold/model/tier rows"}},
+        {"name": "independent_paired_comparisons", "value": 576, "tolerance": 0, "locator": {"kind": "regex", "pattern": "and \\*\\*(?P<value>576)\\*\\* paired"}}
+      ]
+    },
+    {
+      "experiment_id": "chemcpa-nonlinear-v1-v2",
+      "status": "VALIDATED_REJECTED",
+      "golden": true,
+      "source": {"root": "documents", "path": "research_code/evidence/chemcpa-nonlinear-v1-v2/RESULTS.md", "kind": "aggregate_markdown"},
+      "source_sha256": "435f3127f8a338d5477944a326660d339cf82b248f51bb1ccf919d5b90c770b7",
+      "replacement": null,
+      "validity": "Release-safe aggregate evidence for two nonlinear composition pilots. V1 is an exact-context measured-control conditional diagnostic, not a default zero-shot route. V2 is a no-control development follow-up: the molecular C1 branch fails the joint gate, while C0 remains a research-only context baseline. Neither is an exact CPA/chemCPA reproduction or a private-study retraining entrypoint.",
+      "persistence": "PERSISTENT_RELEASE_SAFE",
+      "expected_aggregate_metrics": [
+        {"name": "current_release_strict_modeled_coordinates", "value": 4422, "tolerance": 0, "locator": {"kind": "regex", "pattern": "Strict train missing fraction below 80%: \\*\\*(?P<value>4,422)\\*\\* eligible"}},
+        {"name": "current_release_exact_eighty_ties", "value": 0, "tolerance": 0, "locator": {"kind": "regex", "pattern": "exact-80% ties: \\*\\*(?P<value>0)\\*\\*"}},
+        {"name": "all_itt_treated_drugs", "value": 37, "tolerance": 0, "locator": {"kind": "regex", "pattern": "Primary population: \\*\\*(?P<value>37)\\*\\* treated drugs"}},
+        {"name": "strict_structure_covered_drugs", "value": 22, "tolerance": 0, "locator": {"kind": "regex", "pattern": "\\*\\*(?P<value>22) covered\\*\\* and \\*\\*15 explicit"}},
+        {"name": "strict_structure_missing_drugs", "value": 15, "tolerance": 0, "locator": {"kind": "regex", "pattern": "\\*\\*22 covered\\*\\* and \\*\\*(?P<value>15) explicit missing/fallback\\*\\*"}},
+        {"name": "v1_c1_vs_c0_raw_fc_pcc", "value": -0.003304, "tolerance": 1e-12, "locator": {"kind": "regex", "pattern": "C1 minus C0 Raw-FC PCC was[\\s\\n]+\\*\\*(?P<value>-0\\.003304)\\*\\*"}},
+        {"name": "v1_c1_vs_c0_raw_fc_rmse", "value": 0.002450, "tolerance": 1e-12, "locator": {"kind": "regex", "pattern": "C1 minus C0 Raw-FC RMSE was \\*\\*(?P<value>\\+0\\.002450)\\*\\*"}},
+        {"name": "v2_m0_raw_fc_pcc", "value": 0.255488, "tolerance": 1e-12, "locator": {"kind": "regex", "pattern": "\\| M0 metadata Ridge \\| (?P<value>0\\.255488) \\|"}},
+        {"name": "v2_m0_raw_fc_rmse", "value": 0.621807, "tolerance": 1e-12, "locator": {"kind": "regex", "pattern": "\\| M0 metadata Ridge \\| 0\\.255488 \\| (?P<value>0\\.621807) \\|"}},
+        {"name": "v2_c0_raw_fc_pcc", "value": 0.275814, "tolerance": 1e-12, "locator": {"kind": "regex", "pattern": "\\| C0 no-control nonlinear context \\| (?P<value>0\\.275814) \\|"}},
+        {"name": "v2_c0_raw_fc_rmse", "value": 0.586450, "tolerance": 1e-12, "locator": {"kind": "regex", "pattern": "\\| C0 no-control nonlinear context \\| 0\\.275814 \\| (?P<value>0\\.586450) \\|"}},
+        {"name": "v2_c1_raw_fc_pcc", "value": 0.271387, "tolerance": 1e-12, "locator": {"kind": "regex", "pattern": "\\| C1 real-structure composer \\| (?P<value>0\\.271387) \\|"}},
+        {"name": "v2_c1_raw_fc_rmse", "value": 0.582446, "tolerance": 1e-12, "locator": {"kind": "regex", "pattern": "\\| C1 real-structure composer \\| 0\\.271387 \\| (?P<value>0\\.582446) \\|"}},
+        {"name": "v2_n1_raw_fc_pcc", "value": 0.266930, "tolerance": 1e-12, "locator": {"kind": "regex", "pattern": "\\| N1 permuted-structure control \\| (?P<value>0\\.266930) \\|"}},
+        {"name": "v2_n1_raw_fc_rmse", "value": 0.606727, "tolerance": 1e-12, "locator": {"kind": "regex", "pattern": "\\| N1 permuted-structure control \\| 0\\.266930 \\| (?P<value>0\\.606727) \\|"}},
+        {"name": "v2_c0_vs_m0_pcc_improvement", "value": 0.020325, "tolerance": 1e-12, "locator": {"kind": "regex", "pattern": "C0 versus M0 improved Raw-FC PCC by \\*\\*(?P<value>\\+0\\.020325)\\*\\*"}},
+        {"name": "v2_c0_vs_m0_rmse_improvement", "value": 0.035357, "tolerance": 1e-12, "locator": {"kind": "regex", "pattern": "oriented RMSE by \\*\\*(?P<value>\\+0\\.035357)\\*\\*"}},
+        {"name": "v2_c1_vs_stronger_pcc_improvement", "value": -0.004426, "tolerance": 1e-12, "locator": {"kind": "regex", "pattern": "Raw-FC PCC versus per-run stronger M0/C0 \\| (?P<value>-0\\.004426) \\|"}},
+        {"name": "v2_c1_vs_stronger_rmse_improvement", "value": 0.004005, "tolerance": 1e-12, "locator": {"kind": "regex", "pattern": "Raw-FC RMSE versus per-run stronger M0/C0 \\| (?P<value>\\+0\\.004005) \\|"}},
+        {"name": "v2_covered_c1_vs_n1_pcc_improvement", "value": 0.007129, "tolerance": 1e-12, "locator": {"kind": "regex", "pattern": "Covered-tier Raw-FC PCC versus N1 \\| (?P<value>\\+0\\.007129) \\|"}},
+        {"name": "v2_covered_c1_vs_n1_rmse_improvement", "value": 0.036897, "tolerance": 1e-12, "locator": {"kind": "regex", "pattern": "Covered-tier Raw-FC RMSE versus N1 \\| (?P<value>\\+0\\.036897) \\|"}},
+        {"name": "v2_non_gate_roundtrip_rows", "value": 4, "tolerance": 0, "locator": {"kind": "regex", "pattern": "Exactly \\*\\*(?P<value>4)\\*\\* of 231 secondary paired rows"}}
       ]
     },
     {

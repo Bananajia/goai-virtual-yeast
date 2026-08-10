@@ -39,6 +39,9 @@ class ExperimentInterfaceTest(unittest.TestCase):
         self.assertIn("named_pathway_tokens_evidence", names)
         self.assertIn("drug_target_localnet_evidence", names)
         self.assertIn("strain_genome_cnv_evidence", names)
+        self.assertIn("loss_ablation_evidence", names)
+        self.assertIn("structure_generalization_evidence", names)
+        self.assertIn("chemcpa_nonlinear_evidence", names)
 
     def test_public_rna_pilot_uses_the_same_run_contract(self) -> None:
         registry = ExperimentRegistry.default()

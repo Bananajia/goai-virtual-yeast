@@ -8,6 +8,7 @@
 - `research_code/pipeline/`：数据合同、预处理、成对实测对照与 OOD 划分。
 - `research_code/models/`：均值基线与 masked multi-output Ridge。
 - `research_code/experiments/`：统一实验入口及历史证据 Adapter。
+- `research_code/evidence/`：发布安全的损失函数、结构泛化与 chemCPA 风格非线性实验聚合证据。
 - `research_code/future_experiments/`：严格 public-only 的 RNA mini 与因果链 Provider。
 - `research_code/evaluation/`：Endpoint、Raw-FC、残差、RMSE、VR 与 DEP 指标。
 - `research_code/tests/`：缺失值、泄漏、指标边界和隐私合同测试。
@@ -19,7 +20,7 @@
 
 ```bash
 cd research_code
-uv sync --extra dev
+uv sync --locked --extra dev
 uv run --locked python -m unittest discover -s tests -v
 uv run --locked python research_cli.py list
 uv run --locked python research_cli.py run synthetic_mean_baseline \
@@ -27,7 +28,7 @@ uv run --locked python research_cli.py run synthetic_mean_baseline \
   --output reports/synthetic_mean_baseline
 ```
 
-独立提交包会发现 76 项测试；其中 3 项仅用于回放未随仓库分发的历史实验树，因此在该树不存在时明确跳过（73 passed、3 skipped）。核心、评测、合成实验与 public-only 测试均可独立运行。
+独立提交包会发现 81 项测试；其中 3 项仅用于回放未随仓库分发的历史实验树，因此在该树不存在时明确跳过（78 passed、3 skipped）。当前新增的三个发布安全 Adapter 可在此 clean checkout 中直接回放 3 条聚合记录与 45 个冻结标量；它们核验证据哈希与数值，不冒充私有数据上的模型重训。核心、评测、合成实验与 public-only 测试均可独立运行。
 
 ## Data boundary
 

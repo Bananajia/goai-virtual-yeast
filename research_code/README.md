@@ -24,17 +24,27 @@ uv sync --extra dev
 uv run --locked python -m unittest discover -s tests -v
 uv run --locked python research_cli.py list
 uv run --locked python research_cli.py run synthetic_mean_baseline --scope synthetic --output reports/synthetic_mean_baseline
+uv run --locked python research_cli.py run loss_ablation_evidence --scope aggregate-only --data-root .. --output reports/loss-ablation-replay
+uv run --locked python research_cli.py run structure_generalization_evidence --scope aggregate-only --data-root .. --output reports/structure-generalization-replay
+uv run --locked python research_cli.py run chemcpa_nonlinear_evidence --scope aggregate-only --data-root .. --output reports/chemcpa-nonlinear-replay
 ```
 
 The standalone submission package runs the executable core and public-only tests;
 tests that replay the optional historical experiment tree are skipped when that
-tree is not present.
+tree is not present. The loss-ablation, structure-generalization and
+nonlinear-composition Adapters are
+release-safe exceptions: their compact, identity-free aggregate evidence ships
+under `evidence/loss-ablation-v1/` and
+`evidence/structure-generalization-v1/`, and
+`evidence/chemcpa-nonlinear-v1-v2/`. Each Adapter verifies the source hash
+and frozen scalars. This makes the negative model-selection decisions auditable;
+it does not retrain the private pilots.
 
 ## Non-negotiable contracts
 
 - Metadata and proteome rows are joined by unique `sample_ID`, never by current CSV row order.
 - Fit-time labeled bundles must contain only `split_final=train`; validation/test truth fails closed.
-- The official interpretation policy models proteins with missingness `<80%`; the earlier inclusive `<=80%` policy is available only as an explicitly labeled sensitivity analysis.
+- The interpretation policy models proteins with missingness `<80%`. On the current release this gives 4,422 proteins, exactly the same panel as `<=80%`, because no protein lies exactly on the 80% boundary. The interpretation PDF's 4,232 count is not reproduced by its stated formula and is therefore not hard-coded.
 - Submission row identities, protein names/order, finite values, and declared `log2` scale must pass `SubmissionContract`; the latest official feature template is authoritative.
 - Raw-FC always uses a directly measured matched control sealed by `MeasuredControlPairer`; `match_official_controls()` requires an explicit chemical-to-DMSO/Water map and exact metadata keys. Bare control arrays and `control = endpoint - FC` are forbidden at the evaluator Interface.
 - Official context/drug residuals use outer-fit frozen references. Evaluation-centered residuals remain a separately labeled historical sensitivity estimand.

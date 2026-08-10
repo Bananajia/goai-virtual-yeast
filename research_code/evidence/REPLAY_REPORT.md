@@ -4,20 +4,22 @@ Date: 2026-08-10
 
 ## Outcome
 
-The registry contains 22 records: 20 persistent aggregate sources and two
-explicitly source-missing router lineages.
+The registry contains 25 records: 22 golden aggregate sources, one invalidated
+source and two explicitly source-missing router lineages.
 
 | Replay set | Records | Frozen metrics | Result |
 |---|---:|---:|---|
-| Persistent Documents evidence | 19 golden records | 30 | PASS |
+| Golden aggregate evidence | 22 records | 75 | PASS |
 | Invalidated evidence used as golden | 0 | 0 | PASS |
 
 The invalidated `control-affine-fullpanel-v1` source is retained
 as an audit record but is `INVALIDATED` and therefore excluded from golden
 replay.  The response-based parts of `threshold-control-calibration-v1` are also
 invalidated; its replay is deliberately limited to the frozen historical
-inclusive 4,422-coordinate structural count. The official-facing strict
-`<80%` panel contains 4,232 proteins and is not inferred from this record.
+4,422-coordinate structural count. On the current release, the train-only
+`<80%` panel contains 4,422 proteins and
+has zero exact-boundary ties. The interpretation PDF's 4,232 count is not
+reproduced by its shown formula and is not inferred from this record.
 
 The formal train-mean and Metadata Ridge baseline suite is replayed from the
 frozen V9 portable report artifact. This adds eight checks for the average-value

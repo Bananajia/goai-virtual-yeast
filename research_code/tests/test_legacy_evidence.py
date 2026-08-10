@@ -35,6 +35,18 @@ class LegacyEvidenceRegistryTest(unittest.TestCase):
             registry.get("unified-router-final-v3-scoped").status,
             "BLOCKED_SOURCE_MISSING",
         )
+        self.assertEqual(
+            registry.get("loss-ablation-v1").status,
+            "VALIDATED_REJECTED",
+        )
+        self.assertEqual(
+            registry.get("structure-generalization-v1").status,
+            "VALIDATED_REJECTED",
+        )
+        self.assertEqual(
+            registry.get("chemcpa-nonlinear-v1-v2").status,
+            "VALIDATED_REJECTED",
+        )
 
         raw = REGISTRY_PATH.read_text(encoding="utf-8")
         self.assertNotIn("/Users/", raw)
@@ -141,6 +153,81 @@ class LegacyEvidenceRegistryTest(unittest.TestCase):
         self.assertEqual(receipt.status, "FAIL")
         self.assertEqual(receipt.records_failed, 1)
         self.assertEqual(receipt.metrics_verified, 0)
+
+    def test_release_safe_loss_ablation_adapter_replays(self) -> None:
+        replay = LegacyEvidenceReplay(
+            registry_path=REGISTRY_PATH,
+            experiment_ids=("loss-ablation-v1",),
+        )
+        receipt = replay.verify(documents_root=PROJECT_ROOT)
+
+        self.assertEqual(receipt.status, "PASS")
+        self.assertEqual(receipt.records_passed, 1)
+        self.assertGreaterEqual(receipt.metrics_verified, 6)
+
+    def test_release_safe_structure_generalization_adapter_replays(self) -> None:
+        replay = LegacyEvidenceReplay(
+            registry_path=REGISTRY_PATH,
+            experiment_ids=("structure-generalization-v1",),
+        )
+        receipt = replay.verify(documents_root=PROJECT_ROOT)
+
+        self.assertEqual(receipt.status, "PASS")
+        self.assertEqual(receipt.records_passed, 1)
+        self.assertGreaterEqual(receipt.metrics_verified, 10)
+
+    def test_release_safe_structure_evidence_has_no_machine_local_path(self) -> None:
+        evidence_path = (
+            PROJECT_ROOT
+            / "research_code"
+            / "evidence"
+            / "structure-generalization-v1"
+            / "RESULTS.md"
+        )
+        raw = evidence_path.read_text(encoding="utf-8")
+
+        self.assertNotIn("/Users/", raw)
+        self.assertNotIn("private-data", raw)
+        self.assertIn("**37**", raw)
+        self.assertIn("**22 covered**", raw)
+        self.assertIn("**15 explicit missing/fallback**", raw)
+        self.assertIn("NO-PROMOTION", raw)
+
+    def test_release_safe_chemcpa_inspired_nonlinear_adapter_replays(self) -> None:
+        replay = LegacyEvidenceReplay(
+            registry_path=REGISTRY_PATH,
+            experiment_ids=("chemcpa-nonlinear-v1-v2",),
+        )
+        receipt = replay.verify(documents_root=PROJECT_ROOT)
+
+        self.assertEqual(receipt.status, "PASS")
+        self.assertEqual(receipt.records_passed, 1)
+        self.assertGreaterEqual(receipt.metrics_verified, 14)
+
+    def test_release_safe_chemcpa_inspired_evidence_is_aggregate_only(self) -> None:
+        evidence_path = (
+            PROJECT_ROOT
+            / "research_code"
+            / "evidence"
+            / "chemcpa-nonlinear-v1-v2"
+            / "RESULTS.md"
+        )
+        raw = evidence_path.read_text(encoding="utf-8")
+
+        for forbidden in (
+            "/Users/",
+            "private-data",
+            "sample_ID",
+            "InChIKey",
+            "SMILES",
+            "per-condition prediction",
+            "protein vector",
+            "model weight",
+        ):
+            self.assertNotIn(forbidden, raw)
+        self.assertIn("exact-context measured-control conditional diagnostic", raw)
+        self.assertIn("no-control development follow-up", raw)
+        self.assertIn("NO-PROMOTION", raw)
 
 
 if __name__ == "__main__":

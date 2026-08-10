@@ -1,13 +1,13 @@
 {
-  "experiment_directories": 95,
+  "experiment_directories": 99,
   "families": {
     "active_calibration": 3,
-    "control_calibration": 3,
+    "control_calibration": 4,
     "knowledge_network": 7,
     "learned_architecture": 1,
     "llm_causal_chain": 9,
-    "other": 25,
-    "public_chemistry": 24,
+    "other": 27,
+    "public_chemistry": 25,
     "rna_transfer": 3,
     "statistical_baseline": 4,
     "strain_genome": 10,
@@ -17,7 +17,7 @@
     "code/experiments",
     "experiments"
   ],
-  "python_files": 416,
+  "python_files": 440,
   "records": [
     {
       "family": "other",
@@ -628,6 +628,22 @@
       "test_files": 1
     },
     {
+      "family": "control_calibration",
+      "path": "experiments/chemcpa-nonlinear-no-control-v2",
+      "python_files": 6,
+      "report_files": 2,
+      "status": "UNREGISTERED_LEGACY",
+      "test_files": 1
+    },
+    {
+      "family": "other",
+      "path": "experiments/chemcpa-nonlinear-pilot-v1",
+      "python_files": 6,
+      "report_files": 2,
+      "status": "UNREGISTERED_LEGACY",
+      "test_files": 1
+    },
+    {
       "family": "time_dynamics",
       "path": "experiments/conditional-latent-uncertainty-v1",
       "python_files": 6,
@@ -708,6 +724,14 @@
       "test_files": 2
     },
     {
+      "family": "other",
+      "path": "experiments/loss-ablation-v1",
+      "python_files": 6,
+      "report_files": 2,
+      "status": "VALIDATED_REJECTED",
+      "test_files": 1
+    },
+    {
       "family": "learned_architecture",
       "path": "experiments/multiobjective-highresponse-v1",
       "python_files": 7,
@@ -756,6 +780,14 @@
       "test_files": 1
     },
     {
+      "family": "public_chemistry",
+      "path": "experiments/structure-generalization-v1",
+      "python_files": 6,
+      "report_files": 2,
+      "status": "VALIDATED_REJECTED",
+      "test_files": 1
+    },
+    {
       "family": "control_calibration",
       "path": "experiments/threshold-control-calibration-v1",
       "python_files": 6,
@@ -781,5 +813,5 @@
     }
   ],
   "schema_version": "1.0",
-  "test_files": 115
+  "test_files": 119
 }
