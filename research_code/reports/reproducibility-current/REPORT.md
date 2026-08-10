@@ -10,7 +10,7 @@
 
 本轮复现分成三种证据，不能混为一谈：
 
-1. **统一代码的可执行复现：** 完整研究归档中 75 项单元/合同测试全部通过；干净公开仓库中 72 项通过，3 项因历史证据树未随包分发而明确跳过。73 个 Python 文件编译通过。
+1. **统一代码的可执行复现：** 完整研究归档中 76 项单元/合同测试全部通过；干净公开仓库中 73 项通过，3 项因历史证据树未随包分发而明确跳过。73 个 Python 文件编译通过。
 2. **历史结论的证据回放：** 19 份持久聚合证据的 SHA-256 与 30 个冻结指标全部复现，未读取私有矩阵或逐样本预测。
 3. **端到端合成验证：** 固定 seed 7 的平均值模型正确呈现条件方差塌缩；固定 seed 11 的 Metadata Ridge 在已知合成机制上恢复 Raw-FC PCC 0.999994、条件方差比 0.999841、Endpoint RMSE 0.003759。
 
@@ -38,6 +38,7 @@
 - `match_official_controls()` 必须通过显式 chemical→DMSO/Water 映射，并同时匹配 source、菌株、培养基、温度、时间、instrument 与 plate；映射或对照缺失时停止。
 - 拟合入口通过 `split_final=train` 角色检查，validation/test 标签进入拟合会立即失败。
 - endpoint、control 与 prediction 使用相同 replicate×protein 共同有限值掩码。
+- 真值有效的 Endpoint 坐标要求预测值有限；模型若输出 NaN 试图跳过困难坐标，评价器会立即停止。实测对照缺失只缩小响应指标的合法队列，不会删除 Endpoint 评价坐标。
 - 官方 context/drug residual 默认使用 outer-fit truth 冻结参考；参考同时绑定样本 ID、蛋白 ID、分组及顺序。历史 evaluation-centered 残差单独标为内部敏感性。individuality 中心化前使用共同掩码；每个 `group × protein` 至少两个有限观测。
 - 真值有方差而预测恒定时 PCC 记为 0，不再把 NaN 静默跳过，避免平均值模型分数虚高。
 - Endpoint 同时报告 all-cell 与 paired-cell scope；Raw-FC、残差、VR 和 DEP 只用 paired scope。

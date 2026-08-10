@@ -190,7 +190,7 @@ def _family_metrics(
 class EvaluationSuite:
     """Deep evaluation Module shared by all experiment Implementations."""
 
-    schema_version = "1.0"
+    schema_version = "1.1"
 
     def evaluate(self, inputs: EvaluationInput) -> EvaluationResult:
         truth = np.asarray(inputs.truth_endpoint, dtype=np.float64)
@@ -222,6 +222,13 @@ class EvaluationSuite:
             raise ValueError("paired measured-control mask failed integrity validation")
         if len(inputs.context_groups) != len(truth) or len(inputs.drug_groups) != len(truth):
             raise ValueError("context and drug labels must align with condition rows")
+
+        missing_prediction = np.isfinite(truth) & ~np.isfinite(prediction)
+        if np.any(missing_prediction):
+            raise ValueError(
+                "prediction must be finite at every finite truth endpoint cell; "
+                "a model may not use NaN to opt out of difficult coordinates"
+            )
 
         metrics: Dict[str, float] = {}
         counts: Dict[str, int] = {
@@ -327,6 +334,7 @@ class EvaluationSuite:
                 "residual_references_fit_only": residual_mode == ResidualReferenceMode.FIT_FROZEN,
                 "residual_references_evaluation_centered": residual_mode == ResidualReferenceMode.EVALUATION_CENTERED,
                 "endpoint_scope_is_all_common_cells": True,
+                "prediction_finite_where_truth_finite": True,
                 "response_scope_is_direct_control_paired": True,
                 "dep_policy_supplied": inputs.dep_policy is not None,
             },

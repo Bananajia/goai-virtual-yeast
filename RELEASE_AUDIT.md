@@ -4,13 +4,13 @@ Audit date: 2026-08-10
 
 ## Published scope
 
-- One 42-page A4 technical report authored by 小米蕉队.
+- One 43-page A4 technical report authored by 小米蕉队.
 - The `research_code/` unified execution layer, public fixtures, aggregate reports and tests.
 - No historical private experiment tree and no competition dataset.
 
 ## Verification
 
-- Python test discovery: 75 tests were discovered; 72 passed and 3 optional historical-evidence tests were skipped because that tree is intentionally not distributed.
+- Python test discovery: 76 tests were discovered; 73 passed and 3 optional historical-evidence tests were skipped because that tree is intentionally not distributed.
 - Dependency lock: `uv lock --check` passed with 27 resolved packages.
 - Archive/file review: no cache directory, Python bytecode, environment file, credential file, model weight, database, archive or structured competition-data file is present.
 - Path review: no personal absolute path or local-file URI is present.

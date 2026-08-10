@@ -94,7 +94,6 @@ class EvaluationSuiteTest(unittest.TestCase):
         prediction = self.truth.copy()
         control = self.control.copy()
         control[0, 0] = np.nan
-        prediction[1, 1] = np.nan
 
         result = EvaluationSuite().evaluate(
             EvaluationInput(
@@ -107,13 +106,28 @@ class EvaluationSuiteTest(unittest.TestCase):
             )
         )
 
-        self.assertEqual(result.counts["endpoint_cells"], 11)
-        self.assertEqual(result.counts["raw_fc_cells"], 10)
-        self.assertEqual(result.counts["endpoint_paired_cells"], 10)
+        self.assertEqual(result.counts["endpoint_cells"], 12)
+        self.assertEqual(result.counts["raw_fc_cells"], 11)
+        self.assertEqual(result.counts["endpoint_paired_cells"], 11)
         self.assertAlmostEqual(result.metrics["raw_fc_rmse"], 0.0)
         self.assertAlmostEqual(
             result.metrics["endpoint_paired_rmse"], result.metrics["raw_fc_rmse"]
         )
+
+    def test_prediction_nan_cannot_opt_out_of_finite_truth_cell(self) -> None:
+        prediction = self.truth.copy()
+        prediction[1, 1] = np.nan
+        with self.assertRaisesRegex(ValueError, "may not use NaN to opt out"):
+            EvaluationSuite().evaluate(
+                EvaluationInput(
+                    truth_endpoint=self.truth,
+                    prediction_endpoint=prediction,
+                    paired_response=self.paired_response(self.truth, self.control),
+                    context_groups=("c1", "c1", "c1"),
+                    drug_groups=("d1", "d1", "d2"),
+                    residual_reference_mode=ResidualReferenceMode.EVALUATION_CENTERED,
+                )
+            )
 
     def test_group_center_excludes_group_protein_singletons(self) -> None:
         truth = np.asarray([[1.0, np.nan], [np.nan, 4.0], [3.0, 6.0]])

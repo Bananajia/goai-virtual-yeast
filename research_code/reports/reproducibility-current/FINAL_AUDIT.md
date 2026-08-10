@@ -18,8 +18,8 @@ Verdict: **PASS WITH DECLARED EXTERNAL DEPENDENCIES**
   submission ID/feature/log2/finite contracts have dedicated negative tests.
 - Aggregate reporting validates scalar metrics, non-negative counts, boolean
   contracts, portable provenance and safe notes before atomic output.
-- Full research archive: 75/75 unified tests passed. Clean public checkout:
-  72 passed and three optional historical-evidence replay tests skipped.
+- Full research archive: 76/76 unified tests passed. Clean public checkout:
+  73 passed and three optional historical-evidence replay tests skipped.
 - 73 Python files compiled.
 - `uv lock --check` resolved 27 packages.
 - 17 experiments are discoverable through the common CLI.

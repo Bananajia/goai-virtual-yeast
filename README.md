@@ -11,6 +11,7 @@
 - `research_code/future_experiments/`：严格 public-only 的 RNA mini 与因果链 Provider。
 - `research_code/evaluation/`：Endpoint、Raw-FC、残差、RMSE、VR 与 DEP 指标。
 - `research_code/tests/`：缺失值、泄漏、指标边界和隐私合同测试。
+- `research_code/reports/meeting-audit-20260810/`：8 月 10 日技术交流会的逐段核对、时间戳和报告修改边界。
 
 比赛原始数据、私有实体映射、逐样本预测、蛋白向量、模型凭据及本机路径均不包含在仓库中。
 
@@ -26,7 +27,7 @@ uv run --locked python research_cli.py run synthetic_mean_baseline \
   --output reports/synthetic_mean_baseline
 ```
 
-独立提交包会发现 75 项测试；其中 3 项仅用于回放未随仓库分发的历史实验树，因此在该树不存在时明确跳过（72 passed、3 skipped）。核心、评测、合成实验与 public-only 测试均可独立运行。
+独立提交包会发现 76 项测试；其中 3 项仅用于回放未随仓库分发的历史实验树，因此在该树不存在时明确跳过（73 passed、3 skipped）。核心、评测、合成实验与 public-only 测试均可独立运行。
 
 ## Data boundary
 

@@ -6,17 +6,17 @@ Date: 2026-08-10
 
 ```text
 PYTHONPATH=research_code python3 -m unittest discover -s research_code/tests -q
-Ran 75 tests
+Ran 76 tests
 OK
 ```
 
-In the full private research archive all 75 tests pass. In the clean public
-checkout, 72 pass and three optional historical-evidence replay tests are
+In the full private research archive all 76 tests pass. In the clean public
+checkout, 73 pass and three optional historical-evidence replay tests are
 skipped because the referenced historical tree is intentionally not shipped.
 
 The suite covers preprocessing, fit-only state, unknown metadata levels, grouped
 OOD zero overlap, strict measured-control pairing, common masks, residual
-singletons, constant predictions, DEP policy isolation, provider payload
+singletons, prediction-NaN opt-out rejection, constant predictions, DEP policy isolation, provider payload
 privacy, deterministic public fixtures, evidence tampering and code inventory.
 
 ```text
