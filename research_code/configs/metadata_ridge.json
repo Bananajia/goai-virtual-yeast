@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0",
+  "model": "masked_multi_output_ridge",
+  "alpha": 1.0,
+  "categorical": ["strain", "chemical", "medium", "time_unit"],
+  "numeric": {
+    "temperature": "standardize",
+    "time": "log1p"
+  },
+  "technical_covariates": ["data_source", "instrument"],
+  "forbidden_default_covariates": ["plate"],
+  "missingness_policy": {
+    "fit_only": true,
+    "max_missing_fraction": 0.8,
+    "remove_when": ">0.8"
+  },
+  "full_output_contract": 5243
+}

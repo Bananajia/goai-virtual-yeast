@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0",
+  "endpoint_scope": "truth_prediction_common_cells",
+  "response_scope": "truth_prediction_direct_control_common_cells",
+  "residual_reference": "evaluation_centered",
+  "group_protein_minimum_finite": 2,
+  "pcc_aggregation": "macro_by_condition",
+  "rmse_aggregation": "micro_by_cell",
+  "vehicle_policy": "direct_pairwise_or_explicit_pooled_exploratory",
+  "constant_prediction_pcc": 0.0,
+  "constant_truth_pcc": null,
+  "dep_policy": {
+    "threshold_quantile": 0.9,
+    "minimum_k": 10,
+    "maximum_panel_fraction": 0.25,
+    "fit_scope": "outer_fit_only"
+  }
+}

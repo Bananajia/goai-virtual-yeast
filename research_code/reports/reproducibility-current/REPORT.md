@@ -1,0 +1,120 @@
+# 当前代码整理与复现报告
+
+日期：2026-08-10
+
+参赛队伍：**小米蕉队**
+
+## 结论
+
+项目已经形成一层独立、可执行的研究代码，历史实验目录保持原样作为证据。新代码将数据处理、模型、实验、未来公共数据实验、统一评测和聚合报告分开，并通过同一个实验 Interface 调用。
+
+本轮复现分成三种证据，不能混为一谈：
+
+1. **统一代码的可执行复现：** 60 项单元/合同测试全部通过，68 个 Python 文件编译通过。
+2. **历史结论的证据回放：** 19 份持久聚合证据的 SHA-256 与 30 个冻结指标全部复现，未读取私有矩阵或逐样本预测。
+3. **端到端合成验证：** 固定 seed 7 的平均值模型正确呈现条件方差塌缩；固定 seed 11 的 Metadata Ridge 在已知合成机制上恢复 Raw-FC PCC 0.999994、条件方差比 0.999841、Endpoint RMSE 0.003759。
+
+这证明新 Interface、统一评测和证据链可以复现。它不等于重新训练了全部历史模型；历史运行没有保存逐样本预测，且两个最终路由名称缺少可执行源码，因此这两项不能伪装成源码级复现。
+
+## 目录与职责
+
+| 目录 | 唯一职责 | 主要 Interface |
+|---|---|---|
+| `pipeline/` | 数据合同、log2、fit-only 缺失过滤、metadata 编码、OOD 划分、实测对照配对 | `DatasetAdapter`、`MissingnessFilter`、`GroupedOODSplitter`、`MeasuredControlPairer` |
+| `models/` | 可替换预测器 | `fit()` / `predict()`；均值与 masked multi-output Ridge |
+| `experiments/` | 一个 Python 文件代表一个实验；只做组装，不复制评测实现 | `Experiment.run(RunContext)` |
+| `experiment_core/` | 注册、执行、状态与历史证据 Adapter | `ExperimentResult`、`ExperimentRegistry`、`LegacyEvidenceReplay` |
+| `future_experiments/` | 与比赛私有数据物理隔离的 public-only 研究 | `CausalChainProvider`、public RNA fixture |
+| `evaluation/` | 唯一规范指标实现 | `EvaluationSuite`、`DEPPolicy`、`PromotionGate` |
+| `reporting/` | 只写模型级聚合 JSON/Markdown | `AggregateReportWriter` |
+| `evidence/` | 冻结来源、哈希、有效性、替代关系和代码盘点 | `registry.json`、`code_inventory.json` |
+| `tests/` | 缺失、泄漏、分组、指标边界和隐私回归测试 | Python `unittest` |
+
+历史树仍包含 95 个实验目录、416 个 Python 文件和 115 个测试文件。它们没有被批量改写；新层通过 Adapter 引用已验证证据，避免为了“整理”而破坏原始实验谱系。
+
+## 统一评测的关键修正
+
+- Raw-FC 必须由 `predicted endpoint - directly measured matched control` 得到；evaluator 只接受经过 `MeasuredControlPairer` 密封验证的 paired response，裸 control 数组、只传 FC 或用 `truth endpoint - truth FC` 反推对照都会失败。
+- endpoint、control 与 prediction 使用相同 replicate×protein 共同有限值掩码。
+- context、drug 和 individuality 残差在中心化前使用共同掩码；每个 `group × protein` 至少两个有限观测。
+- 真值有方差而预测恒定时 PCC 记为 0，不再把 NaN 静默跳过，避免平均值模型分数虚高。
+- Endpoint 同时报告 all-cell 与 paired-cell scope；Raw-FC、残差、VR 和 DEP 只用 paired scope。
+- DEP 的阈值与 K 只由 outer-fit 数据拟合，并在 baseline、candidate 和负对照之间共享。
+- paired scope 下 Endpoint RMSE 与 Raw-FC RMSE 必然相等，因为二者减去同一个实测 control；报告不再把它们描述成两条独立误差信号。
+- 聚合报告在创建目录或文件前验证 metrics 只能是标量、counts 只能是非负整数、contract 只能是布尔值，并拒绝绝对路径和 private-data 文本；JSON 与 Markdown 在内存中完成后再原子写出。
+
+## 历史正式结果回放
+
+证据回放结果：19/19 持久 golden records 通过，30/30 冻结指标一致，0 个已作废结果被当作 golden。
+
+本轮新增了正式 baseline 套件的冻结回放：
+
+| 结果 | 冻结值 | 含义 |
+|---|---:|---|
+| 平均值 baseline Flattened PCC | 0.941091 | 基础蛋白丰度轮廓非常稳定 |
+| 平均值 baseline Flattened R² | 0.885639 | 大部分 flattened 总变异来自跨蛋白基础差异 |
+| 平均值 baseline 逐蛋白平均 R² | -0.041278 | 没有恢复同一蛋白跨条件变化 |
+| 平均值 baseline 条件方差比 | 0 | 对所有条件输出同一张谱 |
+| Metadata Ridge Endpoint PCC | 0.985145 | 完整蛋白谱轮廓高度相关，不是 98.5% 药物效应准确率 |
+| pooled-control Raw-FC PCC | 0.326278 | 仅为缺少 chemical→vehicle 映射时的探索性内部口径 |
+| 输出合同 | 4,422 modeled + 821 fallback = 5,243 | 缺失率大于 80% 才退出主要拟合；完整输出宽度不变 |
+
+`control-affine-fullpanel-v1` 及旧 response-threshold 结果的无效部分继续保留作审计，但不会进入 golden 结论。
+
+## Future public-only 小实验
+
+### 公共因果链 Interface
+
+Provider 只接受固定 schema 的公共事实与已锁来源，输出 3–8 条 `source → relation → 23 mechanism axes` 边。它不接受 DataFrame、文件路径、比赛实体、任意自由文本、蛋白向量或私有实验摘要。
+
+已实现：
+
+- 确定性 Fixture provider；
+- 仅允许 `127.0.0.1/localhost` 的 Ollama provider；
+- 默认禁用的 OpenAI-compatible public-only Adapter。
+
+本轮没有调用外部 GPT。未来若显式启用，Adapter 也只能收到通过 allowlist 与哈希校验的公共 fixture。
+
+### RNA/L1000FWD mini smoke
+
+六条冻结的公开 HA1E RNA 扰动签名被映射到同一 23 机制轴，与 fixture 因果链比较：macro cosine 0.122479、pooled Pearson 0.120599、signed accuracy 0.150943。两次离线执行的 JSON 与 Markdown 逐字一致。
+
+该结果只证明“公共查询 → 因果链 → RNA 机制轴 → 聚合评测”链路可运行；样本太少且是人类 RNA，不能据此声称已迁移到酵母蛋白质组。
+
+### 本地开放权重模型实测
+
+在同一 public-only Interface 上又运行了本机 `qwen3:8b`。匿名单例 smoke 成功并立即复跑得到逐字一致的聚合结果（macro cosine 0.094916）；预设六例运行在匿名第 2 例遇到不符合封闭 schema 的结构化输出，因此 fail-closed，丢弃全部部分分数并标记 `BLOCKED`。这说明本地推理链路可用，但当前模型的结构输出稳定性尚不足，不能声称 LLM 机制特征有效，更不能进入酵母预测模型。
+
+该运行只访问回环 Ollama，未联网、未调用闭源 API，且未保存药物名、prompt、response、因果链、RNA truth 或逐例向量。
+
+## 已知复现边界
+
+- `chemical-router-v3` 与 `unified-router-final-v3-scoped` 只有叙述和私有聚合线索，在持久项目与工作区都没有找到对应源码，状态固定为 `BLOCKED_SOURCE_MISSING`。若重写，只能标记 reconstruction，不能冒充原实现。
+- 大多数历史隐私协议没有保存逐样本预测，所以无法仅靠 aggregate CSV 用新版 evaluator 重算每个 cell；必须在未来新的 train-only OOF 运行中同时调用 legacy 与 canonical scorer 做 reconciliation。
+- 本轮没有读取 fixed validation/test 真值，没有重新调参，也没有通过网络发送比赛数据。
+- public-only mini fixture 的许可和跨物种边界必须保留；它目前不进入比赛模型。
+
+## 最短复现命令
+
+```bash
+cd GOAI-virtual-yeast-project
+PYTHONPATH=research_code python3 -m unittest discover -s research_code/tests -q
+PYTHONPATH=research_code python3 research_code/research_cli.py list
+PYTHONPATH=research_code python3 research_code/research_cli.py run \
+  legacy_evidence_replay --scope aggregate-only \
+  --data-root . \
+  --output research_code/reports/reproducibility-current/legacy-evidence
+PYTHONPATH=research_code python3 research_code/research_cli.py run \
+  synthetic_mean_baseline --scope synthetic \
+  --seed 7 \
+  --output research_code/reports/reproducibility-current/synthetic-pipeline
+PYTHONPATH=research_code python3 research_code/research_cli.py run \
+  synthetic_metadata_ridge --scope synthetic \
+  --seed 11 \
+  --output research_code/reports/reproducibility-current/synthetic-metadata-ridge
+PYTHONPATH=research_code python3 research_code/research_cli.py run \
+  public_rna_lincs_mini --scope public \
+  --output research_code/reports/reproducibility-current/public-rna-mini
+```
+
+详细命令与检查结果见 `TEST_RECORD.md`；每个子目录还有各自的 `REPORT.md`/`result.json`。

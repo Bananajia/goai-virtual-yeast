@@ -1,0 +1,39 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "goai-virtual-yeast-research"
+version = "0.1.0"
+description = "Unified, leakage-safe research framework for virtual yeast perturbation prediction"
+requires-python = ">=3.9"
+dependencies = [
+  "numpy>=2.0",
+  "pandas>=2.0",
+]
+
+[project.optional-dependencies]
+public = [
+  "h5py>=3.10",
+  "rdkit>=2024.3",
+]
+dev = ["pytest>=8.0"]
+
+[project.scripts]
+vy-research = "research_cli:main"
+
+[tool.setuptools]
+py-modules = ["research_cli"]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = [
+  "evaluation*",
+  "evidence*",
+  "experiment_core*",
+  "experiments*",
+  "future_experiments*",
+  "models*",
+  "pipeline*",
+  "reporting*",
+]

@@ -1,0 +1,64 @@
+{
+  "contract": {
+    "endpoint_scope_is_all_common_cells": true,
+    "group_protein_minimum_two": true,
+    "measured_control_passed_directly": true,
+    "measured_control_verified_by_pairer": true,
+    "response_common_mask": true,
+    "response_scope_is_direct_control_paired": true
+  },
+  "counts": {
+    "conditions": 6,
+    "context_residual_cells": 24,
+    "drug_residual_cells": 24,
+    "endpoint_cells": 24,
+    "endpoint_paired_cells": 24,
+    "individuality_cells": 24,
+    "proteins": 4,
+    "raw_fc_cells": 24
+  },
+  "metrics": {
+    "amplitude_log_error": 0.2751914590893991,
+    "condition_variance_ratio": 0.0,
+    "context_residual_mean_protein_r2": 0.0,
+    "context_residual_pcc": 0.0,
+    "context_residual_pooled_pcc": 0.0,
+    "context_residual_pooled_r2": 0.0,
+    "context_residual_rmse": 0.47725891471164894,
+    "drug_residual_mean_protein_r2": 0.0,
+    "drug_residual_pcc": 0.0,
+    "drug_residual_pooled_pcc": 0.0,
+    "drug_residual_pooled_r2": 0.0,
+    "drug_residual_rmse": 0.47725891471164894,
+    "endpoint_mean_protein_r2": -0.20065379403866213,
+    "endpoint_paired_mean_protein_r2": -0.20065379403866213,
+    "endpoint_paired_pcc": 0.9950663785134101,
+    "endpoint_paired_pooled_pcc": 0.9871244563646793,
+    "endpoint_paired_pooled_r2": 0.9706440083708927,
+    "endpoint_paired_rmse": 0.8196235898885937,
+    "endpoint_pcc": 0.9950663785134101,
+    "endpoint_pooled_pcc": 0.9871244563646793,
+    "endpoint_pooled_r2": 0.9706440083708927,
+    "endpoint_rmse": 0.8196235898885937,
+    "individuality_mean_protein_r2": 0.0,
+    "individuality_pcc": 0.0,
+    "individuality_pooled_pcc": 0.0,
+    "individuality_pooled_r2": 0.0,
+    "individuality_rmse": 0.7394639950761096,
+    "raw_fc_mean_protein_r2": -0.20065379403866218,
+    "raw_fc_pcc": 0.2419068578640351,
+    "raw_fc_pooled_pcc": 0.27243779131301965,
+    "raw_fc_pooled_r2": -0.07187443944779504,
+    "raw_fc_rmse": 0.8196235898885937
+  },
+  "name": "synthetic_mean_baseline",
+  "notes": [
+    "Synthetic fixture only; no competition data were read."
+  ],
+  "provenance": {
+    "data_scope": "synthetic",
+    "seed": 7
+  },
+  "schema_version": "1.0",
+  "status": "COMPLETED"
+}

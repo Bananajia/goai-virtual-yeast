@@ -1,0 +1,128 @@
+{
+  "ranked_gene_limit_per_direction": 20,
+  "schema_version": 1,
+  "signatures": [
+    {
+      "query": {
+        "cell_line": "HA1E",
+        "dose_micromolar": 11.1,
+        "perturbagen": "Rapamycin",
+        "perturbagen_id": "BRD-A23770159",
+        "signature_id": "CPC006_HA1E_6H:BRD-A23770159-001-02-3:11.1",
+        "time_hours": 6
+      },
+      "truth": {
+        "down_genes": [
+          "WWP1", "HSPA8", "GLRX2", "CHN2", "TPI1", "SEC23IP", "L1CAM", "PMM2", "TATDN2", "TSPAN8",
+          "BHLHE41", "APBB2", "SUSD4", "GOLGA4", "GOT2", "BANK1", "CUL1", "MTMR1", "CDH6", "WDR7"
+        ],
+        "up_genes": [
+          "HSPA2", "TFAP2B", "PPAP2B", "NDUFB7", "HIST1H4J", "STK10", "C3ORF14", "NQO1", "ID4", "MFAP5",
+          "IGKC", "S100A12", "PBXIP1", "MAFF", "PECAM1", "PI3", "SPARCL1", "TYROBP", "EIF1AY", "NTRK2"
+        ]
+      }
+    },
+    {
+      "query": {
+        "cell_line": "HA1E",
+        "dose_micromolar": 10.0,
+        "perturbagen": "MG-132",
+        "perturbagen_id": "BRD-K60230970",
+        "signature_id": "CPC002_HA1E_6H:BRD-K60230970-001-04-3:10",
+        "time_hours": 6
+      },
+      "truth": {
+        "down_genes": [
+          "HIST1H4C", "TM4SF1", "ADD3", "PPAP2B", "TSPAN12", "C9", "MFHAS1", "DHTKD1", "POGLUT1", "CTSS",
+          "P4HA1", "CREBL2", "ATPIF1", "CAV1", "CXCL12", "C1ORF116", "KDM4B", "DUT", "RAB40B", "PERP"
+        ],
+        "up_genes": [
+          "PCK2", "BAG2", "PMAIP1", "HSPA6", "HSPA5", "HSPA2", "HSPA9", "HSPA8", "IL6ST", "DDIT3",
+          "MARCH6", "ATP9A", "APLP2", "CANX", "IL1RL1", "TSPAN13", "MT1M", "GADD45A", "GADD45B", "ARHGEF2"
+        ]
+      }
+    },
+    {
+      "query": {
+        "cell_line": "HA1E",
+        "dose_micromolar": 10.0,
+        "perturbagen": "THAPSIGARGIN",
+        "perturbagen_id": "BRD-K69023402",
+        "signature_id": "CPC005_HA1E_24H:BRD-K69023402-001-02-5:10",
+        "time_hours": 24
+      },
+      "truth": {
+        "down_genes": [
+          "PRKCH", "ADD3", "YWHAE", "NRCAM", "IDI1", "TSPAN13", "TPBG", "DAB2", "MAFF", "CX3CR1",
+          "DCK", "GADD45B", "ZNF238", "GNG12", "ATP2B4", "GNPTAB", "ANXA2P2", "PTP4A2", "GPR137B", "ABCD3"
+        ],
+        "up_genes": [
+          "PCK2", "PTGS2", "PHGDH", "HSPA5", "HSPA9", "YIF1A", "CASP10", "N4BP2L2", "SULF1", "PYCR1",
+          "MARCH8", "CANX", "SLC39A14", "HYOU1", "RABAC1", "PRNP", "INPP4B", "SHMT2", "TPPP3", "PTP4A1"
+        ]
+      }
+    },
+    {
+      "query": {
+        "cell_line": "HA1E",
+        "dose_micromolar": 10.0,
+        "perturbagen": "oligomycin c",
+        "perturbagen_id": "BRD-K05350981",
+        "signature_id": "CPC011_HA1E_6H:BRD-K05350981-001-01-0:10",
+        "time_hours": 6
+      },
+      "truth": {
+        "down_genes": [
+          "SMARCC1", "TIMP3", "EPX", "RAB4A", "DARS", "MEIS2", "TXNDC9", "SLC15A2", "PLK1S1", "CHI3L1",
+          "S100A10", "DUSP22", "SLC25A14", "UGP2", "LBP", "PGBD5", "DNTT", "CALM1", "SELENBP1", "SLC43A3"
+        ],
+        "up_genes": [
+          "GUSBP11", "YWHAE", "HSPA5", "KLHL24", "POLG2", "PDGFRA", "CDR2L", "IL6ST", "RAPGEF4", "RAPGEF2",
+          "MXRA8", "CLDN7", "IGKC", "CALM3", "GATM", "NFE2L2", "NRN1", "EIF3F", "CYBRD1", "PSD3"
+        ]
+      }
+    },
+    {
+      "query": {
+        "cell_line": "HA1E",
+        "dose_micromolar": 10.0,
+        "perturbagen": "Etoposide",
+        "perturbagen_id": "BRD-A18419789",
+        "signature_id": "CPC005_HA1E_6H:BRD-A18419789-001-01-4:10",
+        "time_hours": 6
+      },
+      "truth": {
+        "down_genes": [
+          "TGM2", "FXYD5", "ADD3", "PLK1", "HSPA8", "LRRC41", "FKBP5", "CLEC2B", "RAD23B", "LEF1",
+          "PAM", "KIF2C", "DCN", "TPX2", "ZNF146", "GADD45A", "EIF1AY", "GNG12", "MAP3K5", "GNPTAB"
+        ],
+        "up_genes": [
+          "TAP1", "FXYD6", "PCK1", "PMAIP1", "TM7SF2", "IER5", "CKB", "PCCB", "IFI27", "SLC6A8",
+          "CPE", "CD36", "STXBP6", "SCO2", "PKP1", "BLCAP", "RBM15B", "MAFF", "LHX2", "SERPINB2"
+        ]
+      }
+    },
+    {
+      "query": {
+        "cell_line": "HA1E",
+        "dose_micromolar": 10.0,
+        "perturbagen": "NOCODAZOLE",
+        "perturbagen_id": "BRD-K12539581",
+        "signature_id": "CPC004_HA1E_6H:BRD-K12539581-001-14-6:10",
+        "time_hours": 6
+      },
+      "truth": {
+        "down_genes": [
+          "TIMP3", "TUSC3", "NRCAM", "NISCH", "HSPA8", "CLIP3", "CPE", "CROCCP2", "CHI3L1", "FBLN1",
+          "NID1", "DCN", "CSGALNACT1", "LOC100272216", "PPP1R3C", "RGS5", "CACNA1D", "FAM46A", "ADAM28", "OXA1L"
+        ],
+        "up_genes": [
+          "FXYD5", "ACTR3", "MAN2B1", "STK10", "CLMN", "SPRED2", "MFAP5", "PCK1", "FBP1", "MARCH3",
+          "GPM6B", "EGF", "ZYX", "CALM1", "TPD52", "TKTL1", "VOPP1", "PIK3CD", "LYZ", "CDC42SE1"
+        ]
+      }
+    }
+  ],
+  "source": "L1000FWD",
+  "source_api": "https://maayanlab.cloud/l1000fwd/sig/{sig_id}"
+}
