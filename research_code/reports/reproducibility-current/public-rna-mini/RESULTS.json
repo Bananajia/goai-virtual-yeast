@@ -15,8 +15,8 @@
   },
   "interpretation": "Interface smoke only: six human HA1E RNA signatures are too small to establish transfer to yeast proteomics. A real local/authorized model must beat this frozen fixture under a preregistered public holdout before promotion.",
   "metrics": {
-    "macro_axis_cosine": 0.12247922283842239,
-    "pooled_axis_pearson": 0.12059896504605033,
+    "macro_axis_cosine": 0.1224792228384224,
+    "pooled_axis_pearson": 0.12059896504604994,
     "predicted_axis_precision": 0.6111111111111112,
     "signed_axis_accuracy": 0.1509433962264151,
     "top_axis_hit_rate": 0.6666666666666666,

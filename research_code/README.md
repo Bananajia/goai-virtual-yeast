@@ -20,27 +20,26 @@ This directory is the clean execution layer for the GOAI virtual-yeast project. 
 
 ```bash
 cd research_code
-python3 -m unittest discover -s tests -v
-python3 research_cli.py list
-python3 research_cli.py run synthetic_mean_baseline --scope synthetic --output reports/synthetic_mean_baseline
+uv sync --extra dev
+uv run --locked python -m unittest discover -s tests -v
+uv run --locked python research_cli.py list
+uv run --locked python research_cli.py run synthetic_mean_baseline --scope synthetic --output reports/synthetic_mean_baseline
 ```
 
 The standalone submission package runs the executable core and public-only tests;
 tests that replay the optional historical experiment tree are skipped when that
 tree is not present.
 
-The optional environment can be locked with:
-
-```bash
-uv sync --extra dev
-uv run python -m unittest discover -s tests -v
-```
-
 ## Non-negotiable contracts
 
-- Missingness thresholds are fit on training rows only; `>80%` is removed and exactly `80%` remains when the 80% policy is selected.
-- Raw-FC always uses a directly measured matched control sealed by `MeasuredControlPairer`; bare control arrays and `control = endpoint - FC` are forbidden at the evaluator Interface.
-- Centered residuals require at least two common finite observations per `group × protein`.
+- Metadata and proteome rows are joined by unique `sample_ID`, never by current CSV row order.
+- Fit-time labeled bundles must contain only `split_final=train`; validation/test truth fails closed.
+- The official interpretation policy models proteins with missingness `<80%`; the earlier inclusive `<=80%` policy is available only as an explicitly labeled sensitivity analysis.
+- Submission row identities, protein names/order, finite values, and declared `log2` scale must pass `SubmissionContract`; the latest official feature template is authoritative.
+- Raw-FC always uses a directly measured matched control sealed by `MeasuredControlPairer`; `match_official_controls()` requires an explicit chemical-to-DMSO/Water map and exact metadata keys. Bare control arrays and `control = endpoint - FC` are forbidden at the evaluator Interface.
+- Official context/drug residuals use outer-fit frozen references. Evaluation-centered residuals remain a separately labeled historical sensitivity estimand.
+- Official high-effect proteins use `abs(log2 FC) > 1`; the fit-quantile threshold remains an auxiliary sensitivity policy.
+- Evaluation-centered residuals and individuality require at least two common finite observations per `group × protein`.
 - Every compared model uses the same evaluation cohort and protein panel.
 - Reports validate scalar aggregates and portable provenance before atomically writing. No identities, vectors, paths, prompts, or predictions are persisted.
 - External GPT-compatible providers are disabled by default and accept only pinned public fixtures.

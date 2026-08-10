@@ -29,6 +29,9 @@ truth and prediction subtract the same control:
 - `*_pooled_pcc`: flattened diagnostic. It is retained to expose the historical
   average-proteome trap, not used alone for promotion.
 - `*_pooled_r2`: flattened explained variation.
+- `*_macro_sample_r2`: R² across proteins per condition, then macro averaged.
+- `*_macro_protein_pcc`: PCC down conditions per protein, then macro averaged.
+- `*_median_protein_r2`: R² down conditions per protein, then median aggregated.
 - `*_mean_protein_r2`: R² down conditions for each protein, then mean across
   proteins with defined truth variance.
 - `*_rmse`: micro RMSE across all jointly finite cells.
@@ -37,13 +40,21 @@ truth and prediction subtract the same control:
 
 `Raw-FC = endpoint - directly measured control`.
 
-- Context residual: subtract the per-protein mean within the declared biological
-  context group.
-- Drug residual: subtract the per-protein mean within each chemical group.
+- Official context residual: freeze the per-protein mean for each declared
+  biological context using outer-fit true Raw-FC, then subtract that same frozen
+  reference from held truth and prediction.
+- Official drug residual: freeze the per-protein mean for each chemical using
+  outer-fit true Raw-FC, then subtract that same reference from held truth and
+  prediction.
 - Individuality: subtract the per-protein mean across the evaluation cohort.
 
-All centering uses exactly the truth–prediction common mask. A `group × protein`
-cell is included only if it has at least two finite conditions.
+`ResidualReferenceMode.FIT_FROZEN` is the official-facing default. Its sealed
+references bind evaluation replicate IDs, protein IDs, group labels, and their
+orders; same-shaped but misordered references fail.
+`EVALUATION_CENTERED` is retained only to replay historical internal diagnostics;
+it centers on the held cohort and cannot be compared as if it were the official
+residual. Evaluation centering uses exactly the truth-prediction common mask and
+requires at least two finite conditions per `group × protein`.
 
 ## Condition variance ratio
 
@@ -54,13 +65,15 @@ and RMSE.
 
 ## High-response / DEP metrics
 
-`DEPPolicy` is fit once on outer-fit Raw-FC and shared by baseline, candidate,
-and negative controls:
+The official-facing high-effect policy fixes `abs(log2 FC) > 1`; only `K` is fit
+on outer-fit Raw-FC and shared by baseline, candidate, and negative controls.
+The historical quantile threshold remains available as an auxiliary policy:
 
-- threshold: fit-only absolute FC quantile;
+- threshold: official fixed strict value `1`, or a labeled fit-only sensitivity quantile;
 - `K`: fit-only median DEP count, clipped to a declared range;
-- signed precision/recall@K;
+- signed precision/recall/F1@K;
 - tie-aware macro AUPRC;
+- PCC over the truth-positive high-response coordinates;
 - top-K direction consistency;
 - truth-positive MAE/RMSE.
 

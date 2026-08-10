@@ -6,9 +6,13 @@ Date: 2026-08-10
 
 ```text
 PYTHONPATH=research_code python3 -m unittest discover -s research_code/tests -q
-Ran 60 tests
+Ran 75 tests
 OK
 ```
+
+In the full private research archive all 75 tests pass. In the clean public
+checkout, 72 pass and three optional historical-evidence replay tests are
+skipped because the referenced historical tree is intentionally not shipped.
 
 The suite covers preprocessing, fit-only state, unknown metadata levels, grouped
 OOD zero overlap, strict measured-control pairing, common masks, residual
@@ -17,7 +21,7 @@ privacy, deterministic public fixtures, evidence tampering and code inventory.
 
 ```text
 find research_code -type f -name '*.py' ... | python3 -m py_compile
-68 Python files
+73 Python files
 PASS
 ```
 

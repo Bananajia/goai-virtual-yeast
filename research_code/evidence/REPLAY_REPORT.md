@@ -15,13 +15,15 @@ explicitly source-missing router lineages.
 The invalidated `control-affine-fullpanel-v1` source is retained
 as an audit record but is `INVALIDATED` and therefore excluded from golden
 replay.  The response-based parts of `threshold-control-calibration-v1` are also
-invalidated; its replay is deliberately limited to the frozen 4,422-coordinate
-structural count.
+invalidated; its replay is deliberately limited to the frozen historical
+inclusive 4,422-coordinate structural count. The official-facing strict
+`<80%` panel contains 4,232 proteins and is not inferred from this record.
 
 The formal train-mean and Metadata Ridge baseline suite is replayed from the
 frozen V9 portable report artifact. This adds eight checks for the average-value
-trap, the 4,422 + 821 output contract, Endpoint PCC and the explicitly
-exploratory pooled-control Raw-FC result.
+trap, the historical 4,422 + 821 restoration contract, Endpoint PCC and the
+explicitly exploratory pooled-control Raw-FC result. The old restoration width
+is not a submission feature-contract claim.
 
 ## Lineage safeguards
 

@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import numpy as np
 
-from evaluation import EvaluationInput
+from evaluation import EvaluationInput, ResidualReferenceMode
 from pipeline.controls import (
     ControlEstimand,
     MeasurementMatrix,
@@ -50,6 +50,7 @@ class SyntheticMeanBaseline:
                 paired_response=paired_response,
                 context_groups=("c1", "c1", "c2", "c2", "c3", "c3"),
                 drug_groups=("d1", "d1", "d2", "d2", "d3", "d3"),
+                residual_reference_mode=ResidualReferenceMode.EVALUATION_CENTERED,
             ),
             notes=("Synthetic fixture only; no competition data were read.",),
             status=ExperimentStatus.COMPLETED.value,

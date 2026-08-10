@@ -12,7 +12,9 @@
   "missingness_policy": {
     "fit_only": true,
     "max_missing_fraction": 0.8,
-    "remove_when": ">0.8"
+    "remove_when": ">=0.8",
+    "boundary": "official_interpretation_material"
   },
-  "full_output_contract": 5243
+  "source_matrix_width": 5243,
+  "submission_columns": "latest_official_feature_contract"
 }

@@ -7,7 +7,14 @@ from .preprocessing import (
 )
 from .splitting import GroupedOODSplitter, OODSplit
 from .metadata import MetadataEncoder, MetadataField
-from .dataset import DataScope, DatasetBundle, DatasetAdapter, InMemoryDatasetAdapter
+from .dataset import (
+    DataScope,
+    DatasetBundle,
+    DatasetAdapter,
+    InMemoryDatasetAdapter,
+    align_dataset_frames,
+    require_training_bundle,
+)
 from .controls import (
     AnalysisRole,
     ControlEstimand,
@@ -16,6 +23,8 @@ from .controls import (
     MeasurementRole,
     ResponseEstimate,
 )
+from .submission import SubmissionContract
+from .vehicle import OfficialVehicleMap, Vehicle, match_official_controls
 
 __all__ = [
     "GroupedOODSplitter",
@@ -23,12 +32,18 @@ __all__ = [
     "DatasetAdapter",
     "DatasetBundle",
     "InMemoryDatasetAdapter",
+    "align_dataset_frames",
+    "require_training_bundle",
     "AnalysisRole",
     "ControlEstimand",
     "MeasuredControlPairer",
     "MeasurementMatrix",
     "MeasurementRole",
     "ResponseEstimate",
+    "SubmissionContract",
+    "OfficialVehicleMap",
+    "Vehicle",
+    "match_official_controls",
     "Log2ProteomeTransformer",
     "MissingnessFilter",
     "MetadataEncoder",

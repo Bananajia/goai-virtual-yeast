@@ -10,11 +10,13 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 import math
-from typing import Dict, Mapping, Sequence, Tuple
+from typing import Dict, Mapping, Optional, Sequence, Tuple
 
 import numpy as np
 
 from pipeline.controls import ResponseEstimate
+from .dep import DEPPolicy, high_response_metrics
+from .residuals import FrozenResidualReferences, ResidualReferenceMode
 
 
 EPSILON = 1e-12
@@ -27,6 +29,9 @@ class EvaluationInput:
     paired_response: ResponseEstimate
     context_groups: Sequence[object]
     drug_groups: Sequence[object]
+    residual_reference_mode: ResidualReferenceMode = ResidualReferenceMode.FIT_FROZEN
+    frozen_residual_references: Optional[FrozenResidualReferences] = None
+    dep_policy: Optional[DEPPolicy] = None
 
 
 @dataclass(frozen=True)
@@ -92,6 +97,36 @@ def _mean_protein_r2(truth: np.ndarray, prediction: np.ndarray) -> float:
     return float(np.mean(scores)) if scores else math.nan
 
 
+def _macro_sample_r2(truth: np.ndarray, prediction: np.ndarray) -> float:
+    scores = [
+        _pooled_r2(row_truth, row_prediction)
+        for row_truth, row_prediction in zip(truth, prediction)
+    ]
+    finite = np.asarray(scores, dtype=np.float64)
+    finite = finite[np.isfinite(finite)]
+    return float(np.mean(finite)) if len(finite) else math.nan
+
+
+def _macro_protein_pearson(truth: np.ndarray, prediction: np.ndarray) -> float:
+    scores = [
+        finite_pearson(truth[:, protein], prediction[:, protein])
+        for protein in range(truth.shape[1])
+    ]
+    finite = np.asarray(scores, dtype=np.float64)
+    finite = finite[np.isfinite(finite)]
+    return float(np.mean(finite)) if len(finite) else math.nan
+
+
+def _median_protein_r2(truth: np.ndarray, prediction: np.ndarray) -> float:
+    scores = [
+        _pooled_r2(truth[:, protein], prediction[:, protein])
+        for protein in range(truth.shape[1])
+    ]
+    finite = np.asarray(scores, dtype=np.float64)
+    finite = finite[np.isfinite(finite)]
+    return float(np.median(finite)) if len(finite) else math.nan
+
+
 def group_center_common(
     truth: np.ndarray,
     prediction: np.ndarray,
@@ -142,6 +177,9 @@ def _family_metrics(
             f"{prefix}_pcc": _macro_row_pearson(truth, prediction),
             f"{prefix}_pooled_pcc": finite_pearson(truth.ravel(), prediction.ravel()),
             f"{prefix}_pooled_r2": _pooled_r2(truth, prediction),
+            f"{prefix}_macro_sample_r2": _macro_sample_r2(truth, prediction),
+            f"{prefix}_macro_protein_pcc": _macro_protein_pearson(truth, prediction),
+            f"{prefix}_median_protein_r2": _median_protein_r2(truth, prediction),
             f"{prefix}_mean_protein_r2": _mean_protein_r2(truth, prediction),
             f"{prefix}_rmse": _rmse(truth, prediction),
         },
@@ -215,33 +253,68 @@ class EvaluationSuite:
         )
         metrics.update(family_metrics)
         counts.update(family_counts)
+        if inputs.dep_policy is not None:
+            metrics.update(high_response_metrics(truth_fc, prediction_fc, inputs.dep_policy))
         truth_rms = np.sqrt(np.nanmean(np.square(truth_fc), axis=1))
         prediction_rms = np.sqrt(np.nanmean(np.square(prediction_fc), axis=1))
         amplitude = np.abs(np.log1p(prediction_rms) - np.log1p(truth_rms))
         metrics["amplitude_log_error"] = float(np.nanmedian(amplitude))
 
-        for name, groups in (
-            ("context_residual", inputs.context_groups),
-            ("drug_residual", inputs.drug_groups),
-            ("individuality", ("all",) * len(truth_fc)),
-        ):
-            centered_truth, centered_prediction = group_center_common(
-                truth_fc, prediction_fc, groups
+        try:
+            residual_mode = ResidualReferenceMode(inputs.residual_reference_mode)
+        except (TypeError, ValueError) as error:
+            raise ValueError("unknown residual reference mode") from error
+        if residual_mode == ResidualReferenceMode.FIT_FROZEN:
+            if inputs.frozen_residual_references is None:
+                raise ValueError("fit-frozen residual scoring requires outer-fit references")
+            references = inputs.frozen_residual_references.require_fit_only()
+            if references.context.shape != truth_fc.shape or references.drug.shape != truth_fc.shape:
+                raise ValueError("fit-frozen residual references must align with evaluation responses")
+            if references.evaluation_replicate_ids != tuple(paired_response.replicate_ids):
+                raise ValueError("fit-frozen replicate identities or row order do not match evaluation")
+            if references.protein_ids != tuple(paired_response.protein_ids):
+                raise ValueError("fit-frozen protein identities or column order do not match evaluation")
+            if references.context_groups != tuple(inputs.context_groups):
+                raise ValueError("fit-frozen context groups do not match evaluation")
+            if references.drug_groups != tuple(inputs.drug_groups):
+                raise ValueError("fit-frozen drug groups do not match evaluation")
+            residual_families = (
+                ("context_residual", truth_fc - references.context, prediction_fc - references.context),
+                ("drug_residual", truth_fc - references.drug, prediction_fc - references.drug),
             )
+        else:
+            context_truth, context_prediction = group_center_common(
+                truth_fc, prediction_fc, inputs.context_groups
+            )
+            drug_truth, drug_prediction = group_center_common(
+                truth_fc, prediction_fc, inputs.drug_groups
+            )
+            residual_families = (
+                ("context_residual", context_truth, context_prediction),
+                ("drug_residual", drug_truth, drug_prediction),
+            )
+
+        for name, centered_truth, centered_prediction in residual_families:
             family_metrics, family_counts = _family_metrics(
                 name, centered_truth, centered_prediction
             )
             metrics.update(family_metrics)
             counts.update(family_counts)
-            if name == "individuality":
-                valid = np.isfinite(centered_truth) & np.isfinite(centered_prediction)
-                truth_energy = float(np.sum(np.square(centered_truth[valid])))
-                prediction_energy = float(np.sum(np.square(centered_prediction[valid])))
-                metrics["condition_variance_ratio"] = (
-                    prediction_energy / truth_energy
-                    if truth_energy > EPSILON
-                    else math.nan
-                )
+
+        individuality_truth, individuality_prediction = group_center_common(
+            truth_fc, prediction_fc, ("all",) * len(truth_fc)
+        )
+        family_metrics, family_counts = _family_metrics(
+            "individuality", individuality_truth, individuality_prediction
+        )
+        metrics.update(family_metrics)
+        counts.update(family_counts)
+        valid = np.isfinite(individuality_truth) & np.isfinite(individuality_prediction)
+        truth_energy = float(np.sum(np.square(individuality_truth[valid])))
+        prediction_energy = float(np.sum(np.square(individuality_prediction[valid])))
+        metrics["condition_variance_ratio"] = (
+            prediction_energy / truth_energy if truth_energy > EPSILON else math.nan
+        )
 
         return EvaluationResult(
             metrics=metrics,
@@ -251,7 +324,10 @@ class EvaluationSuite:
                 "measured_control_verified_by_pairer": True,
                 "response_common_mask": True,
                 "group_protein_minimum_two": True,
+                "residual_references_fit_only": residual_mode == ResidualReferenceMode.FIT_FROZEN,
+                "residual_references_evaluation_centered": residual_mode == ResidualReferenceMode.EVALUATION_CENTERED,
                 "endpoint_scope_is_all_common_cells": True,
                 "response_scope_is_direct_control_paired": True,
+                "dep_policy_supplied": inputs.dep_policy is not None,
             },
         )

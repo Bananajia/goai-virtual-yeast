@@ -27,7 +27,7 @@
       "source": {"root": "documents", "path": "reports/complete-research-report-v9/artifact.json", "kind": "aggregate_json"},
       "source_sha256": "4626aa97ffcd377241fb807bfa4c1694ff049ef698702aadc767f56a25806dde",
       "replacement": null,
-      "validity": "Frozen formal aggregate evidence for the train-mean sanity baseline and metadata Ridge core; the pooled-control Raw-FC value remains exploratory rather than an official vehicle-specific score.",
+      "validity": "Frozen historical inclusive-mask evidence for the train-mean sanity baseline and metadata Ridge core; the pooled-control Raw-FC value remains exploratory, and the 4,422 count is not the official strict <80% panel.",
       "expected_aggregate_metrics": [
         {"name": "mean_baseline_validation_flattened_pearson", "value": 0.9410907706567551, "tolerance": 1e-15, "locator": {"kind": "json_pointer", "pointer": "/snapshot/datasets/round1_mean_baseline/4/flattened_pearson"}},
         {"name": "mean_baseline_validation_flattened_r2", "value": 0.8856385477767921, "tolerance": 1e-15, "locator": {"kind": "json_pointer", "pointer": "/snapshot/datasets/round1_mean_baseline/4/flattened_r2"}},
@@ -35,8 +35,8 @@
         {"name": "mean_baseline_validation_condition_variance_ratio", "value": 0.0, "tolerance": 0, "locator": {"kind": "json_pointer", "pointer": "/snapshot/datasets/round1_mean_baseline/4/condition_variance_ratio"}},
         {"name": "metadata_ridge_endpoint_pcc", "value": 0.9851453236882924, "tolerance": 1e-15, "locator": {"kind": "json_pointer", "pointer": "/snapshot/datasets/headline/0/endpoint_pcc"}},
         {"name": "metadata_ridge_pooled_exploratory_raw_fc_pcc", "value": 0.326277750247267, "tolerance": 1e-15, "locator": {"kind": "json_pointer", "pointer": "/snapshot/datasets/headline/0/raw_fc_pcc"}},
-        {"name": "modeled_proteins_at_eighty_percent", "value": 4422, "tolerance": 0, "locator": {"kind": "json_pointer", "pointer": "/snapshot/datasets/headline/0/modeled_proteins"}},
-        {"name": "full_output_contract_proteins", "value": 5243, "tolerance": 0, "locator": {"kind": "json_pointer", "pointer": "/snapshot/datasets/headline/0/full_panel_proteins"}}
+        {"name": "historical_inclusive_eighty_percent_modeled_proteins", "value": 4422, "tolerance": 0, "locator": {"kind": "json_pointer", "pointer": "/snapshot/datasets/headline/0/modeled_proteins"}},
+        {"name": "historical_source_matrix_width", "value": 5243, "tolerance": 0, "locator": {"kind": "json_pointer", "pointer": "/snapshot/datasets/headline/0/full_panel_proteins"}}
       ]
     },
     {
@@ -190,9 +190,9 @@
       "source": {"root": "documents", "path": "experiments/threshold-control-calibration-v1/RESULTS.md", "kind": "aggregate_markdown"},
       "source_sha256": "1e2a702878640dbf6799ca7dfb83c3ef1f05b0f3f1672cee74e2b4bd5bf1e074",
       "replacement": "control-affine-fullpanel-v2-pairwise",
-      "validity": "Only structural counts, coordinate coverage and exact-key matching are valid; all response-based threshold and calibration evidence is invalidated.",
+      "validity": "Only historical inclusive-mask structural counts, coordinate coverage and exact-key matching are valid; all response-based threshold and calibration evidence is invalidated, and 4,422 is not the official strict panel.",
       "expected_aggregate_metrics": [
-        {"name": "eighty_percent_modeled_coordinates", "value": 4422, "tolerance": 0, "locator": {"kind": "regex", "pattern": "\\| \\*\\*80%\\*\\* \\| \\*\\*(?P<value>4,422)\\*\\*"}}
+        {"name": "historical_inclusive_eighty_percent_modeled_coordinates", "value": 4422, "tolerance": 0, "locator": {"kind": "regex", "pattern": "\\| \\*\\*80%\\*\\* \\| \\*\\*(?P<value>4,422)\\*\\*"}}
       ]
     },
     {
@@ -202,7 +202,7 @@
       "source": {"root": "documents", "path": "experiments/training-camp-completion-v1/RESULTS.md", "kind": "aggregate_markdown"},
       "source_sha256": "8a89baea6ef00cad2a3eacd360b341c2bcae8614eea43d565905bbc201997a33",
       "replacement": null,
-      "validity": "Source/instrument calibration transfers across held plates, plate identity is rejected, and the 5,243-coordinate fail-closed contract passes.",
+      "validity": "Source/instrument calibration transfers across held plates and plate identity is rejected. The historical 5,243-coordinate restoration test validates source-matrix engineering only; submission width is governed by the official feature template.",
       "expected_aggregate_metrics": [
         {"name": "unseen_plate_source_instrument_endpoint_pcc_gain", "value": 0.01511, "tolerance": 1e-12, "locator": {"kind": "regex", "pattern": "\\| source \\+ instrument \\| 未见整板 \\| \\*\\*(?P<value>\\+0\\.01511)\\*\\*"}},
         {"name": "unseen_plate_source_instrument_raw_fc_pcc_gain", "value": 0.11865, "tolerance": 1e-12, "locator": {"kind": "regex", "pattern": "\\| source \\+ instrument \\| 未见整板 \\| \\*\\*\\+0\\.01511\\*\\* \\| \\*\\*(?P<value>\\+0\\.11865)\\*\\*"}}

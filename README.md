@@ -18,25 +18,18 @@
 
 ```bash
 cd research_code
-python3 -m unittest discover -s tests -v
-python3 research_cli.py list
-python3 research_cli.py run synthetic_mean_baseline \
+uv sync --extra dev
+uv run --locked python -m unittest discover -s tests -v
+uv run --locked python research_cli.py list
+uv run --locked python research_cli.py run synthetic_mean_baseline \
   --scope synthetic \
   --output reports/synthetic_mean_baseline
 ```
 
-可选依赖环境：
-
-```bash
-cd research_code
-uv sync --extra dev
-uv run python -m unittest discover -s tests -v
-```
-
-独立提交包会发现 60 项测试；其中 3 项仅用于回放未随仓库分发的历史实验树，因此在该树不存在时明确跳过。核心、评测、合成实验与 public-only 测试均可独立运行。
+独立提交包会发现 75 项测试；其中 3 项仅用于回放未随仓库分发的历史实验树，因此在该树不存在时明确跳过（72 passed、3 skipped）。核心、评测、合成实验与 public-only 测试均可独立运行。
 
 ## Data boundary
 
-任何比赛矩阵都必须由本机调用方通过 Pipeline Adapter 显式提供。公共 Provider 默认关闭网络写入能力；GPT-compatible Provider 只接受固定的 public-only schema，不接受自由文本、比赛路径、样本身份或蛋白向量。
+任何比赛矩阵都必须由本机调用方通过 Pipeline Adapter 显式提供，拟合角色只允许 `split_final=train`。正式 Raw-FC 要求显式 chemical→DMSO/Water 映射和精确 metadata control match；提交列、顺序与 log2 尺度由官方模板合同验证。公共 Provider 默认关闭网络写入能力；GPT-compatible Provider 只接受固定的 public-only schema，不接受自由文本、比赛路径、样本身份或蛋白向量。
 
 本仓库不授予所引用外部数据或模型权重的再分发许可。使用者须分别遵守 ChEBI、STRING、STITCH、Peter 菌株资源、L1000FWD 及相关模型的原始许可。

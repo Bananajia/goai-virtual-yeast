@@ -3,7 +3,15 @@ import unittest
 
 import numpy as np
 
-from evaluation import EvaluationInput, EvaluationSuite, finite_pearson, group_center_common
+from evaluation import (
+    EvaluationInput,
+    EvaluationSuite,
+    ResidualReferenceMode,
+    finite_pearson,
+    fit_fixed_threshold_dep_policy,
+    fit_frozen_residual_references,
+    group_center_common,
+)
 from pipeline.controls import (
     AnalysisRole,
     ControlEstimand,
@@ -59,16 +67,25 @@ class EvaluationSuiteTest(unittest.TestCase):
                 paired_response=self.paired_response(self.truth, self.control),
                 context_groups=("c1", "c1", "c1"),
                 drug_groups=("d1", "d1", "d2"),
+                residual_reference_mode=ResidualReferenceMode.EVALUATION_CENTERED,
+                dep_policy=fit_fixed_threshold_dep_policy(
+                    self.truth - self.control, threshold=1.0, min_k=1, max_fraction=1.0
+                ),
             )
         )
 
         self.assertAlmostEqual(result.metrics["endpoint_pcc"], 1.0)
         self.assertAlmostEqual(result.metrics["endpoint_pooled_pcc"], 1.0)
         self.assertAlmostEqual(result.metrics["endpoint_pooled_r2"], 1.0)
+        self.assertAlmostEqual(result.metrics["endpoint_macro_sample_r2"], 1.0)
+        self.assertAlmostEqual(result.metrics["endpoint_macro_protein_pcc"], 1.0)
+        self.assertAlmostEqual(result.metrics["endpoint_median_protein_r2"], 1.0)
         self.assertAlmostEqual(result.metrics["endpoint_mean_protein_r2"], 1.0)
         self.assertAlmostEqual(result.metrics["raw_fc_pcc"], 1.0)
         self.assertAlmostEqual(result.metrics["endpoint_rmse"], 0.0)
         self.assertAlmostEqual(result.metrics["raw_fc_rmse"], 0.0)
+        self.assertAlmostEqual(result.metrics["dep_threshold_abs_log2_fc"], 1.0)
+        self.assertTrue(result.contract["dep_policy_supplied"])
         self.assertAlmostEqual(result.metrics["endpoint_paired_rmse"], 0.0)
         self.assertTrue(result.contract["measured_control_passed_directly"])
         self.assertEqual(result.counts["raw_fc_cells"], 12)
@@ -86,6 +103,7 @@ class EvaluationSuiteTest(unittest.TestCase):
                 paired_response=self.paired_response(self.truth, control),
                 context_groups=("c1", "c1", "c1"),
                 drug_groups=("d1", "d1", "d2"),
+                residual_reference_mode=ResidualReferenceMode.EVALUATION_CENTERED,
             )
         )
 
@@ -123,6 +141,7 @@ class EvaluationSuiteTest(unittest.TestCase):
                 paired_response=self.paired_response(self.truth, self.control),
                 context_groups=("c1", "c1", "c1"),
                 drug_groups=("d1", "d1", "d2"),
+                residual_reference_mode=ResidualReferenceMode.EVALUATION_CENTERED,
             )
         )
 
@@ -152,6 +171,7 @@ class EvaluationSuiteTest(unittest.TestCase):
                 paired_response=self.paired_response(self.truth, self.control),
                 context_groups=("c1", "c1", "c1"),
                 drug_groups=("d1", "d1", "d2"),
+                residual_reference_mode=ResidualReferenceMode.EVALUATION_CENTERED,
             )
         )
 
@@ -168,6 +188,7 @@ class EvaluationSuiteTest(unittest.TestCase):
                     paired_response=self.control,
                     context_groups=("c1", "c1", "c1"),
                     drug_groups=("d1", "d1", "d2"),
+                    residual_reference_mode=ResidualReferenceMode.EVALUATION_CENTERED,
                 )
             )
 
@@ -182,6 +203,7 @@ class EvaluationSuiteTest(unittest.TestCase):
                     paired_response=self.paired_response(self.truth, self.control),
                     context_groups=("c1", "c1", "c1"),
                     drug_groups=("d1", "d1", "d2"),
+                    residual_reference_mode=ResidualReferenceMode.EVALUATION_CENTERED,
                 )
             )
 
@@ -206,6 +228,67 @@ class EvaluationSuiteTest(unittest.TestCase):
                     paired_response=forged,
                     context_groups=("c1", "c1", "c1"),
                     drug_groups=("d1", "d1", "d2"),
+                    residual_reference_mode=ResidualReferenceMode.EVALUATION_CENTERED,
+                )
+            )
+
+    def test_fit_frozen_residuals_use_outer_fit_truth_and_score_held_rows(self) -> None:
+        fit_fc = np.asarray(
+            [[1.0, 10.0], [3.0, 14.0], [5.0, 20.0]]
+        )
+        references = fit_frozen_residual_references(
+            fit_fc,
+            fit_context_groups=("c1", "c1", "c2"),
+            fit_drug_groups=("d1", "d2", "d1"),
+            evaluation_context_groups=("c1", "c2"),
+            evaluation_drug_groups=("new-drug", "d1"),
+            evaluation_replicate_ids=("r-0", "r-1"),
+            protein_ids=("p-0", "p-1"),
+        )
+        np.testing.assert_allclose(references.context, [[2.0, 12.0], [5.0, 20.0]])
+        self.assertTrue(np.isnan(references.drug[0]).all())
+        np.testing.assert_allclose(references.drug[1], [3.0, 15.0])
+
+        control = np.asarray([[10.0, 20.0], [10.0, 20.0]])
+        truth = control + np.asarray([[4.0, 16.0], [7.0, 21.0]])
+        result = EvaluationSuite().evaluate(
+            EvaluationInput(
+                truth_endpoint=truth,
+                prediction_endpoint=truth.copy(),
+                paired_response=self.paired_response(truth, control),
+                context_groups=("c1", "c2"),
+                drug_groups=("new-drug", "d1"),
+                residual_reference_mode=ResidualReferenceMode.FIT_FROZEN,
+                frozen_residual_references=references,
+            )
+        )
+
+        self.assertAlmostEqual(result.metrics["context_residual_pcc"], 1.0)
+        self.assertAlmostEqual(result.metrics["drug_residual_pcc"], 1.0)
+        self.assertTrue(result.contract["residual_references_fit_only"])
+
+    def test_fit_frozen_references_reject_same_shape_wrong_identity(self) -> None:
+        references = fit_frozen_residual_references(
+            np.asarray([[1.0, 2.0], [3.0, 4.0]]),
+            fit_context_groups=("c1", "c1"),
+            fit_drug_groups=("d1", "d2"),
+            evaluation_context_groups=("c1", "c1"),
+            evaluation_drug_groups=("d1", "d2"),
+            evaluation_replicate_ids=("wrong-0", "wrong-1"),
+            protein_ids=("p-0", "p-1"),
+        )
+        truth = np.asarray([[11.0, 22.0], [12.0, 24.0]])
+        control = np.asarray([[10.0, 20.0], [10.0, 20.0]])
+        with self.assertRaisesRegex(ValueError, "replicate identities"):
+            EvaluationSuite().evaluate(
+                EvaluationInput(
+                    truth_endpoint=truth,
+                    prediction_endpoint=truth.copy(),
+                    paired_response=self.paired_response(truth, control),
+                    context_groups=("c1", "c1"),
+                    drug_groups=("d1", "d2"),
+                    residual_reference_mode=ResidualReferenceMode.FIT_FROZEN,
+                    frozen_residual_references=references,
                 )
             )
 

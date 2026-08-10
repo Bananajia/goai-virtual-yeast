@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import numpy as np
 
-from evaluation import EvaluationInput
+from evaluation import EvaluationInput, ResidualReferenceMode
 from experiment_core.base import ExperimentResult, ExperimentStatus, RunContext
 from experiment_core.runner import ExperimentRunner
 from models import MaskedMultiOutputRidge
@@ -64,6 +64,7 @@ class SyntheticMetadataRidge:
                 paired_response=paired_response,
                 context_groups=tuple(f"context-{index // 2}" for index in range(12)),
                 drug_groups=tuple(f"drug-{index % 3}" for index in range(12)),
+                residual_reference_mode=ResidualReferenceMode.EVALUATION_CENTERED,
             ),
             status=ExperimentStatus.COMPLETED.value,
             notes=("Deterministic synthetic signal-recovery fixture.",),

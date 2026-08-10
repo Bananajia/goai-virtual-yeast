@@ -10,7 +10,7 @@
 
 本轮复现分成三种证据，不能混为一谈：
 
-1. **统一代码的可执行复现：** 60 项单元/合同测试全部通过，68 个 Python 文件编译通过。
+1. **统一代码的可执行复现：** 完整研究归档中 75 项单元/合同测试全部通过；干净公开仓库中 72 项通过，3 项因历史证据树未随包分发而明确跳过。73 个 Python 文件编译通过。
 2. **历史结论的证据回放：** 19 份持久聚合证据的 SHA-256 与 30 个冻结指标全部复现，未读取私有矩阵或逐样本预测。
 3. **端到端合成验证：** 固定 seed 7 的平均值模型正确呈现条件方差塌缩；固定 seed 11 的 Metadata Ridge 在已知合成机制上恢复 Raw-FC PCC 0.999994、条件方差比 0.999841、Endpoint RMSE 0.003759。
 
@@ -35,11 +35,13 @@
 ## 统一评测的关键修正
 
 - Raw-FC 必须由 `predicted endpoint - directly measured matched control` 得到；evaluator 只接受经过 `MeasuredControlPairer` 密封验证的 paired response，裸 control 数组、只传 FC 或用 `truth endpoint - truth FC` 反推对照都会失败。
+- `match_official_controls()` 必须通过显式 chemical→DMSO/Water 映射，并同时匹配 source、菌株、培养基、温度、时间、instrument 与 plate；映射或对照缺失时停止。
+- 拟合入口通过 `split_final=train` 角色检查，validation/test 标签进入拟合会立即失败。
 - endpoint、control 与 prediction 使用相同 replicate×protein 共同有限值掩码。
-- context、drug 和 individuality 残差在中心化前使用共同掩码；每个 `group × protein` 至少两个有限观测。
+- 官方 context/drug residual 默认使用 outer-fit truth 冻结参考；参考同时绑定样本 ID、蛋白 ID、分组及顺序。历史 evaluation-centered 残差单独标为内部敏感性。individuality 中心化前使用共同掩码；每个 `group × protein` 至少两个有限观测。
 - 真值有方差而预测恒定时 PCC 记为 0，不再把 NaN 静默跳过，避免平均值模型分数虚高。
 - Endpoint 同时报告 all-cell 与 paired-cell scope；Raw-FC、残差、VR 和 DEP 只用 paired scope。
-- DEP 的阈值与 K 只由 outer-fit 数据拟合，并在 baseline、candidate 和负对照之间共享。
+- 官方 DEP 使用固定 `abs(log2 FC) > 1`；只有 K 由 outer-fit 数据拟合，并在 baseline、candidate 和负对照之间共享。历史分位数阈值仅为敏感性。
 - paired scope 下 Endpoint RMSE 与 Raw-FC RMSE 必然相等，因为二者减去同一个实测 control；报告不再把它们描述成两条独立误差信号。
 - 聚合报告在创建目录或文件前验证 metrics 只能是标量、counts 只能是非负整数、contract 只能是布尔值，并拒绝绝对路径和 private-data 文本；JSON 与 Markdown 在内存中完成后再原子写出。
 
@@ -57,9 +59,10 @@
 | 平均值 baseline 条件方差比 | 0 | 对所有条件输出同一张谱 |
 | Metadata Ridge Endpoint PCC | 0.985145 | 完整蛋白谱轮廓高度相关，不是 98.5% 药物效应准确率 |
 | pooled-control Raw-FC PCC | 0.326278 | 仅为缺少 chemical→vehicle 映射时的探索性内部口径 |
-| 输出合同 | 4,422 modeled + 821 fallback = 5,243 | 缺失率大于 80% 才退出主要拟合；完整输出宽度不变 |
+| 历史 inclusive 掩码 | 4,422 modeled + 821 fallback = 5,243 | 旧敏感性证据，不能冒充正式规则 |
+| 正式 strict 掩码 | 4,232 modeled + 1,011 filtered | 缺失率达到或超过 80% 即过滤；提交列由最新版官方模板决定 |
 
-`control-affine-fullpanel-v1` 及旧 response-threshold 结果的无效部分继续保留作审计，但不会进入 golden 结论。
+`control-affine-fullpanel-v1` 及旧 response-threshold 结果的无效部分继续保留作审计，但不会进入 golden 结论。现有历史 context/drug residual 与高响应聚合结果没有逐样本预测可供新版 fit-frozen、固定阈值 evaluator 重算，因此仍按旧内部协议标注，不能据此估算官方总分。
 
 ## Future public-only 小实验
 
@@ -92,29 +95,31 @@ Provider 只接受固定 schema 的公共事实与已锁来源，输出 3–8 �
 - `chemical-router-v3` 与 `unified-router-final-v3-scoped` 只有叙述和私有聚合线索，在持久项目与工作区都没有找到对应源码，状态固定为 `BLOCKED_SOURCE_MISSING`。若重写，只能标记 reconstruction，不能冒充原实现。
 - 大多数历史隐私协议没有保存逐样本预测，所以无法仅靠 aggregate CSV 用新版 evaluator 重算每个 cell；必须在未来新的 train-only OOF 运行中同时调用 legacy 与 canonical scorer 做 reconciliation。
 - 本轮没有读取 fixed validation/test 真值，没有重新调参，也没有通过网络发送比赛数据。
+- 正式重放仍依赖组委会提供机器可读 vehicle 映射和最新版 submission feature contract；代码对两者缺失均采用 fail-closed，不用 pooled control 或自定列宽冒充正式结果。
 - public-only mini fixture 的许可和跨物种边界必须保留；它目前不进入比赛模型。
 
 ## 最短复现命令
 
 ```bash
-cd GOAI-virtual-yeast-project
-PYTHONPATH=research_code python3 -m unittest discover -s research_code/tests -q
-PYTHONPATH=research_code python3 research_code/research_cli.py list
-PYTHONPATH=research_code python3 research_code/research_cli.py run \
+cd research_code
+uv sync --extra dev
+uv run --locked python -m unittest discover -s tests -q
+uv run --locked python research_cli.py list
+uv run --locked python research_cli.py run \
   legacy_evidence_replay --scope aggregate-only \
-  --data-root . \
-  --output research_code/reports/reproducibility-current/legacy-evidence
-PYTHONPATH=research_code python3 research_code/research_cli.py run \
+  --data-root .. \
+  --output reports/reproducibility-current/legacy-evidence
+uv run --locked python research_cli.py run \
   synthetic_mean_baseline --scope synthetic \
   --seed 7 \
-  --output research_code/reports/reproducibility-current/synthetic-pipeline
-PYTHONPATH=research_code python3 research_code/research_cli.py run \
+  --output reports/reproducibility-current/synthetic-pipeline
+uv run --locked python research_cli.py run \
   synthetic_metadata_ridge --scope synthetic \
   --seed 11 \
-  --output research_code/reports/reproducibility-current/synthetic-metadata-ridge
-PYTHONPATH=research_code python3 research_code/research_cli.py run \
+  --output reports/reproducibility-current/synthetic-metadata-ridge
+uv run --locked python research_cli.py run \
   public_rna_lincs_mini --scope public \
-  --output research_code/reports/reproducibility-current/public-rna-mini
+  --output reports/reproducibility-current/public-rna-mini
 ```
 
 详细命令与检查结果见 `TEST_RECORD.md`；每个子目录还有各自的 `REPORT.md`/`result.json`。

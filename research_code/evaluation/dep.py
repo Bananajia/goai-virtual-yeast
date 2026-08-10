@@ -14,6 +14,7 @@ class DEPPolicy:
     threshold: float
     k: int
     panel_width: int
+    strict_greater: bool = False
 
 
 def fit_dep_policy(
@@ -38,6 +39,41 @@ def fit_dep_policy(
     k = int(np.clip(proposed, min_k, max(1, upper)))
     k = min(k, values.shape[1])
     return DEPPolicy(threshold=threshold, k=k, panel_width=int(values.shape[1]))
+
+
+def fit_fixed_threshold_dep_policy(
+    fit_fc: np.ndarray,
+    *,
+    threshold: float = 1.0,
+    min_k: int = 10,
+    max_fraction: float = 0.25,
+) -> DEPPolicy:
+    """Use a fixed strict DEP threshold while fitting only K on outer-fit data.
+
+    The competition interpretation material defines high-effect proteins by
+    ``abs(delta_true) > 1``.  The threshold is therefore fixed, while the
+    reporting cutoff K remains derived from the outer-fit response density.
+    """
+
+    values = np.asarray(fit_fc, dtype=np.float64)
+    if values.ndim != 2 or threshold < 0:
+        raise ValueError("fit_fc must be two-dimensional and threshold non-negative")
+    if min_k < 1 or not 0.0 < max_fraction <= 1.0:
+        raise ValueError("min_k and max_fraction define an invalid K policy")
+    finite = np.isfinite(values)
+    if not np.any(finite):
+        raise ValueError("cannot fit a DEP policy without finite fold changes")
+    counts = np.sum(finite & (np.abs(values) > threshold), axis=1)
+    proposed = int(np.median(counts)) if len(counts) else min_k
+    upper = max(min_k, int(math.floor(values.shape[1] * max_fraction)))
+    k = int(np.clip(proposed, min_k, max(1, upper)))
+    k = min(k, values.shape[1])
+    return DEPPolicy(
+        threshold=float(threshold),
+        k=k,
+        panel_width=int(values.shape[1]),
+        strict_greater=True,
+    )
 
 
 def _average_precision_tie_aware(labels: np.ndarray, scores: np.ndarray) -> float:
@@ -72,6 +108,21 @@ def _macro(values: list) -> float:
     return float(np.mean(finite)) if len(finite) else math.nan
 
 
+def _finite_pearson(truth: np.ndarray, prediction: np.ndarray) -> float:
+    valid = np.isfinite(truth) & np.isfinite(prediction)
+    if int(np.sum(valid)) < 2:
+        return math.nan
+    left = truth[valid] - np.mean(truth[valid])
+    right = prediction[valid] - np.mean(prediction[valid])
+    left_energy = float(np.sum(left * left))
+    right_energy = float(np.sum(right * right))
+    if left_energy <= 1e-12:
+        return math.nan
+    if right_energy <= 1e-12:
+        return 0.0
+    return float(np.sum(left * right) / np.sqrt(left_energy * right_energy))
+
+
 def high_response_metrics(
     truth_fc: np.ndarray, prediction_fc: np.ndarray, policy: DEPPolicy
 ) -> Dict[str, float]:
@@ -84,8 +135,10 @@ def high_response_metrics(
 
     precision = []
     recall = []
+    f1 = []
     auprc = []
     direction = []
+    high_response_pcc = []
     errors = []
     samples_with_dep = 0
     scored_cells = 0
@@ -95,7 +148,11 @@ def high_response_metrics(
         prediction = prediction_row[common]
         if len(truth) == 0:
             continue
-        positives = np.abs(truth) >= policy.threshold
+        positives = (
+            np.abs(truth) > policy.threshold
+            if policy.strict_greater
+            else np.abs(truth) >= policy.threshold
+        )
         positive_count = int(np.sum(positives))
         if positive_count == 0:
             continue
@@ -106,9 +163,17 @@ def high_response_metrics(
         signed_hits = positives[predicted_top] & (
             np.sign(prediction[predicted_top]) == np.sign(truth[predicted_top])
         )
-        precision.append(float(np.sum(signed_hits) / k))
-        recall.append(float(np.sum(signed_hits) / positive_count))
+        sample_precision = float(np.sum(signed_hits) / k)
+        sample_recall = float(np.sum(signed_hits) / positive_count)
+        precision.append(sample_precision)
+        recall.append(sample_recall)
+        f1.append(
+            0.0
+            if sample_precision + sample_recall == 0.0
+            else 2.0 * sample_precision * sample_recall / (sample_precision + sample_recall)
+        )
         auprc.append(_average_precision_tie_aware(positives, np.abs(prediction)))
+        high_response_pcc.append(_finite_pearson(truth[positives], prediction[positives]))
         overlap = np.intersect1d(predicted_top, true_top, assume_unique=False)
         if len(overlap):
             direction.append(
@@ -124,7 +189,9 @@ def high_response_metrics(
         "samples_with_dep": float(samples_with_dep),
         "signed_precision_at_k": _macro(precision),
         "signed_recall_at_k": _macro(recall),
+        "signed_f1_at_k": _macro(f1),
         "macro_auprc": _macro(auprc),
+        "high_response_pcc": _macro(high_response_pcc),
         "topk_direction_consistency": _macro(direction),
         "high_response_mae": float(np.mean(np.abs(error_array))) if len(error_array) else math.nan,
         "high_response_rmse": float(np.sqrt(np.mean(np.square(error_array)))) if len(error_array) else math.nan,

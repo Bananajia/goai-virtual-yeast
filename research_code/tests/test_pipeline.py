@@ -19,7 +19,7 @@ class PipelineTest(unittest.TestCase):
         self.assertTrue(np.isnan(transformed[0, 2]))
         self.assertTrue(np.isnan(transformed[1, 1:]).all())
 
-    def test_missingness_is_fit_only_and_exactly_eighty_percent_is_kept(self) -> None:
+    def test_official_missingness_policy_excludes_exactly_eighty_percent(self) -> None:
         train = np.asarray(
             [
                 [1.0, 1.0, np.nan],
@@ -32,8 +32,30 @@ class PipelineTest(unittest.TestCase):
         holdout = np.ones((3, 3))
         filtering = MissingnessFilter(max_missing_fraction=0.80).fit(train)
 
-        self.assertEqual(filtering.keep_mask.tolist(), [True, True, False])
-        self.assertEqual(filtering.transform(holdout).shape, (3, 2))
+        self.assertEqual(filtering.keep_mask.tolist(), [True, False, False])
+        self.assertEqual(filtering.transform(holdout).shape, (3, 1))
+
+    def test_inclusive_eighty_percent_remains_an_explicit_sensitivity_policy(self) -> None:
+        train = np.asarray(
+            [
+                [1.0, 1.0],
+                [1.0, np.nan],
+                [1.0, np.nan],
+                [1.0, np.nan],
+                [1.0, np.nan],
+            ]
+        )
+        filtering = MissingnessFilter(
+            max_missing_fraction=0.80, include_boundary=True
+        ).fit(train)
+
+        self.assertEqual(filtering.keep_mask.tolist(), [True, True])
+
+    def test_official_missingness_is_counted_on_raw_na_before_log2(self) -> None:
+        raw = np.asarray([[0.0, np.nan], [2.0, 4.0]])
+        filtering = MissingnessFilter(max_missing_fraction=0.80).fit_raw(raw)
+        self.assertEqual(filtering.missing_fraction.tolist(), [0.0, 0.5])
+        self.assertEqual(filtering.keep_mask.tolist(), [True, True])
 
     def test_output_contract_restores_full_width_with_train_only_fallback(self) -> None:
         train = np.asarray([[1.0, np.nan, 3.0], [3.0, 10.0, 5.0]])
@@ -43,6 +65,20 @@ class PipelineTest(unittest.TestCase):
         restored = contract.restore(np.asarray([[2.0, 4.0], [4.0, 6.0]]))
 
         np.testing.assert_allclose(restored, [[2.0, 10.0, 4.0], [4.0, 10.0, 6.0]])
+
+    def test_all_missing_filtered_protein_requires_explicit_fit_only_fallback(self) -> None:
+        train = np.asarray([[1.0, np.nan], [3.0, np.nan]])
+        mask = np.asarray([True, False])
+        with self.assertRaisesRegex(ValueError, "explicit unobserved_fallback"):
+            ProteinOutputContract.from_training(train, modeled_mask=mask)
+
+        contract = ProteinOutputContract.from_training(
+            train,
+            modeled_mask=mask,
+            unobserved_fallback=float(np.nanmedian(train)),
+        )
+        restored = contract.restore(np.asarray([[2.0]]))
+        np.testing.assert_allclose(restored, [[2.0, 2.0]])
 
     def test_whole_entity_split_has_zero_identity_overlap(self) -> None:
         entities = np.asarray(["a", "a", "b", "b", "c", "c"])

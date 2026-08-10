@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from typing import Optional
 
 import numpy as np
 
@@ -19,21 +20,56 @@ class Log2ProteomeTransformer:
 
 
 class MissingnessFilter:
-    """Select protein coordinates from fit rows only."""
+    """Select protein coordinates from fit rows only.
 
-    def __init__(self, max_missing_fraction: float = 0.80) -> None:
+    The default follows the competition interpretation material: a protein is
+    modeled only when its fit-set missing fraction is *strictly below* the
+    threshold.  ``include_boundary=True`` preserves the earlier inclusive
+    engineering policy for explicitly labeled sensitivity analyses.
+    """
+
+    def __init__(
+        self,
+        max_missing_fraction: float = 0.80,
+        *,
+        include_boundary: bool = False,
+    ) -> None:
         if not 0.0 <= max_missing_fraction <= 1.0:
             raise ValueError("max_missing_fraction must be in [0, 1]")
         self.max_missing_fraction = float(max_missing_fraction)
+        self.include_boundary = bool(include_boundary)
         self.keep_mask = None
         self.missing_fraction = None
 
     def fit(self, fit_targets: np.ndarray) -> "MissingnessFilter":
+        """Fit from an already validated matrix using finite cells as observed."""
+
         values = np.asarray(fit_targets, dtype=np.float64)
         if values.ndim != 2 or len(values) == 0:
             raise ValueError("fit_targets must be a non-empty two-dimensional matrix")
         self.missing_fraction = np.mean(~np.isfinite(values), axis=0)
-        self.keep_mask = self.missing_fraction <= self.max_missing_fraction
+        if self.include_boundary:
+            self.keep_mask = self.missing_fraction <= self.max_missing_fraction
+        else:
+            self.keep_mask = self.missing_fraction < self.max_missing_fraction
+        return self
+
+    def fit_raw(self, raw_fit_targets: np.ndarray) -> "MissingnessFilter":
+        """Fit the official mask from raw-table missing cells before log2.
+
+        The interpretation material defines missingness from the raw matrix's
+        NA pattern.  Non-missing values are therefore counted as present here;
+        positivity is validated separately by ``Log2ProteomeTransformer``.
+        """
+
+        values = np.asarray(raw_fit_targets, dtype=np.float64)
+        if values.ndim != 2 or len(values) == 0:
+            raise ValueError("raw_fit_targets must be a non-empty two-dimensional matrix")
+        self.missing_fraction = np.mean(np.isnan(values), axis=0)
+        if self.include_boundary:
+            self.keep_mask = self.missing_fraction <= self.max_missing_fraction
+        else:
+            self.keep_mask = self.missing_fraction < self.max_missing_fraction
         return self
 
     def transform(self, values: np.ndarray) -> np.ndarray:
@@ -57,7 +93,11 @@ class ProteinOutputContract:
 
     @classmethod
     def from_training(
-        cls, fit_targets: np.ndarray, modeled_mask: np.ndarray
+        cls,
+        fit_targets: np.ndarray,
+        modeled_mask: np.ndarray,
+        *,
+        unobserved_fallback: Optional[float] = None,
     ) -> "ProteinOutputContract":
         fit_targets = np.asarray(fit_targets, dtype=np.float64)
         modeled_mask = np.asarray(modeled_mask, dtype=bool)
@@ -71,6 +111,15 @@ class ProteinOutputContract:
             out=np.full(fit_targets.shape[1], np.nan, dtype=np.float64),
             where=counts > 0,
         )
+        if np.any((counts == 0) & modeled_mask):
+            raise ValueError("a modeled protein cannot have zero finite fit observations")
+        unobserved_filtered = (counts == 0) & ~modeled_mask
+        if np.any(unobserved_filtered):
+            if unobserved_fallback is None or not np.isfinite(unobserved_fallback):
+                raise ValueError(
+                    "all-missing filtered proteins require an explicit unobserved_fallback"
+                )
+            fallback[unobserved_filtered] = float(unobserved_fallback)
         if np.any(~np.isfinite(fallback[~modeled_mask])):
             raise ValueError("every fallback protein needs at least one finite fit observation")
         return cls(modeled_mask=modeled_mask.copy(), fallback=fallback)
