@@ -289,7 +289,7 @@ class EvaluationSuite:
                 ("context_residual", truth_fc - references.context, prediction_fc - references.context),
                 ("drug_residual", truth_fc - references.drug, prediction_fc - references.drug),
             )
-        else:
+        elif residual_mode == ResidualReferenceMode.EVALUATION_CENTERED:
             context_truth, context_prediction = group_center_common(
                 truth_fc, prediction_fc, inputs.context_groups
             )
@@ -300,6 +300,12 @@ class EvaluationSuite:
                 ("context_residual", context_truth, context_prediction),
                 ("drug_residual", drug_truth, drug_prediction),
             )
+        else:
+            if inputs.frozen_residual_references is not None:
+                raise ValueError(
+                    "not-applicable residual mode cannot carry frozen references"
+                )
+            residual_families = ()
 
         for name, centered_truth, centered_prediction in residual_families:
             family_metrics, family_counts = _family_metrics(
@@ -333,6 +339,7 @@ class EvaluationSuite:
                 "group_protein_minimum_two": True,
                 "residual_references_fit_only": residual_mode == ResidualReferenceMode.FIT_FROZEN,
                 "residual_references_evaluation_centered": residual_mode == ResidualReferenceMode.EVALUATION_CENTERED,
+                "residual_references_not_applicable": residual_mode == ResidualReferenceMode.NOT_APPLICABLE,
                 "endpoint_scope_is_all_common_cells": True,
                 "prediction_finite_where_truth_finite": True,
                 "response_scope_is_direct_control_paired": True,

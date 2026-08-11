@@ -11,6 +11,7 @@ from evaluation import (
     fit_fixed_threshold_dep_policy,
     fit_frozen_residual_references,
     group_center_common,
+    verify_train_only_provenance,
 )
 from pipeline.controls import (
     AnalysisRole,
@@ -250,6 +251,7 @@ class EvaluationSuiteTest(unittest.TestCase):
         fit_fc = np.asarray(
             [[1.0, 10.0], [3.0, 14.0], [5.0, 20.0]]
         )
+        fit_ids = ("fit-0", "fit-1", "fit-2")
         references = fit_frozen_residual_references(
             fit_fc,
             fit_context_groups=("c1", "c1", "c2"),
@@ -258,6 +260,12 @@ class EvaluationSuiteTest(unittest.TestCase):
             evaluation_drug_groups=("new-drug", "d1"),
             evaluation_replicate_ids=("r-0", "r-1"),
             protein_ids=("p-0", "p-1"),
+            fit_replicate_ids=fit_ids,
+            fit_provenance=verify_train_only_provenance(
+                replicate_ids=fit_ids,
+                split_labels=("train",) * 3,
+                source_sha256="d" * 64,
+            ),
         )
         np.testing.assert_allclose(references.context, [[2.0, 12.0], [5.0, 20.0]])
         self.assertTrue(np.isnan(references.drug[0]).all())
@@ -282,6 +290,7 @@ class EvaluationSuiteTest(unittest.TestCase):
         self.assertTrue(result.contract["residual_references_fit_only"])
 
     def test_fit_frozen_references_reject_same_shape_wrong_identity(self) -> None:
+        fit_ids = ("fit-0", "fit-1")
         references = fit_frozen_residual_references(
             np.asarray([[1.0, 2.0], [3.0, 4.0]]),
             fit_context_groups=("c1", "c1"),
@@ -290,6 +299,12 @@ class EvaluationSuiteTest(unittest.TestCase):
             evaluation_drug_groups=("d1", "d2"),
             evaluation_replicate_ids=("wrong-0", "wrong-1"),
             protein_ids=("p-0", "p-1"),
+            fit_replicate_ids=fit_ids,
+            fit_provenance=verify_train_only_provenance(
+                replicate_ids=fit_ids,
+                split_labels=("train",) * 2,
+                source_sha256="e" * 64,
+            ),
         )
         truth = np.asarray([[11.0, 22.0], [12.0, 24.0]])
         control = np.asarray([[10.0, 20.0], [10.0, 20.0]])

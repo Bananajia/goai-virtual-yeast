@@ -1,5 +1,5 @@
 {
-  "experiment_directories": 99,
+  "experiment_directories": 101,
   "families": {
     "active_calibration": 3,
     "control_calibration": 4,
@@ -7,7 +7,7 @@
     "learned_architecture": 1,
     "llm_causal_chain": 9,
     "other": 27,
-    "public_chemistry": 25,
+    "public_chemistry": 27,
     "rna_transfer": 3,
     "statistical_baseline": 4,
     "strain_genome": 10,
@@ -17,7 +17,7 @@
     "code/experiments",
     "experiments"
   ],
-  "python_files": 440,
+  "python_files": 448,
   "records": [
     {
       "family": "other",
@@ -748,6 +748,22 @@
       "test_files": 1
     },
     {
+      "family": "public_chemistry",
+      "path": "experiments/pubchem-structure-confirmatory-v1",
+      "python_files": 6,
+      "report_files": 2,
+      "status": "VALIDATED_REJECTED",
+      "test_files": 1
+    },
+    {
+      "family": "public_chemistry",
+      "path": "experiments/pubchem-structure-coverage-v1",
+      "python_files": 2,
+      "report_files": 1,
+      "status": "UNREGISTERED_LEGACY",
+      "test_files": 1
+    },
+    {
       "family": "other",
       "path": "experiments/public-functional-group-multihead-v1",
       "python_files": 7,
@@ -813,5 +829,5 @@
     }
   ],
   "schema_version": "1.0",
-  "test_files": 119
+  "test_files": 121
 }

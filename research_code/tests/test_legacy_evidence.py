@@ -47,6 +47,10 @@ class LegacyEvidenceRegistryTest(unittest.TestCase):
             registry.get("chemcpa-nonlinear-v1-v2").status,
             "VALIDATED_REJECTED",
         )
+        self.assertEqual(
+            registry.get("pubchem-structure-confirmatory-v1").status,
+            "VALIDATED_REJECTED",
+        )
 
         raw = REGISTRY_PATH.read_text(encoding="utf-8")
         self.assertNotIn("/Users/", raw)
@@ -203,6 +207,43 @@ class LegacyEvidenceRegistryTest(unittest.TestCase):
         self.assertEqual(receipt.status, "PASS")
         self.assertEqual(receipt.records_passed, 1)
         self.assertGreaterEqual(receipt.metrics_verified, 14)
+
+    def test_release_safe_pubchem_confirmatory_adapter_replays(self) -> None:
+        replay = LegacyEvidenceReplay(
+            registry_path=REGISTRY_PATH,
+            experiment_ids=("pubchem-structure-confirmatory-v1",),
+        )
+        receipt = replay.verify(documents_root=PROJECT_ROOT)
+
+        self.assertEqual(receipt.status, "PASS")
+        self.assertEqual(receipt.records_passed, 1)
+        self.assertGreaterEqual(receipt.metrics_verified, 20)
+
+    def test_release_safe_pubchem_confirmatory_evidence_is_aggregate_only(self) -> None:
+        evidence_dir = (
+            PROJECT_ROOT
+            / "research_code"
+            / "evidence"
+            / "pubchem-structure-confirmatory-v1"
+        )
+        raw = (evidence_dir / "RESULTS.md").read_text(encoding="utf-8")
+
+        for forbidden in (
+            "/Users/",
+            "private-data",
+            "sample_ID",
+            "SMILES",
+            "InChIKey",
+            "fold_id",
+            "model weight",
+        ):
+            self.assertNotIn(forbidden, raw)
+        self.assertIn("**4,422**", raw)
+        self.assertIn("exact-80% ties: **0**", raw)
+        self.assertIn("**25 covered**", raw)
+        self.assertIn("**12 explicit missing/fallback**", raw)
+        self.assertIn("NO-PROMOTION", raw)
+        self.assertTrue((evidence_dir / "RELEASE_TEST_RECORD.md").is_file())
 
     def test_release_safe_chemcpa_inspired_evidence_is_aggregate_only(self) -> None:
         evidence_path = (

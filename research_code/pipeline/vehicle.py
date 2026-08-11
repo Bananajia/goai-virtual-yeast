@@ -2,15 +2,59 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import Enum
 from types import MappingProxyType
-from typing import Hashable, Mapping, Sequence, Tuple
+from typing import Hashable, Mapping, Sequence, Tuple, Union
 
 import numpy as np
 import pandas as pd
 
 from .controls import MeasurementMatrix, MeasurementRole
+
+
+_VEHICLE_MAP_SEAL = object()
+
+OFFICIAL_CONTROL_MATCH_COLUMNS = (
+    "source",
+    "strain",
+    "medium",
+    "temperature",
+    "time",
+    "instrument",
+    "plate",
+)
+
+
+@dataclass(frozen=True)
+class OfficialControlMatchColumns:
+    """Bind the seven fixed semantic match roles to physical table columns."""
+
+    source: str
+    strain: str
+    medium: str
+    temperature: str
+    time: str
+    instrument: str
+    plate: str
+    extra_columns: Tuple[str, ...] = ()
+
+    def physical_columns(self) -> Tuple[str, ...]:
+        columns = (
+            self.source,
+            self.strain,
+            self.medium,
+            self.temperature,
+            self.time,
+            self.instrument,
+            self.plate,
+            *tuple(self.extra_columns),
+        )
+        if any(not isinstance(column, str) or not column for column in columns):
+            raise ValueError("official control-match column names must be non-empty strings")
+        if len(set(columns)) != len(columns):
+            raise ValueError("official control-match roles must bind to unique columns")
+        return columns
 
 
 class Vehicle(str, Enum):
@@ -21,6 +65,7 @@ class Vehicle(str, Enum):
 @dataclass(frozen=True)
 class OfficialVehicleMap:
     assignments: Mapping[Hashable, Vehicle]
+    _verification_seal: object = field(default=None, repr=False, compare=False)
 
     @classmethod
     def from_mapping(
@@ -34,9 +79,16 @@ class OfficialVehicleMap:
                 parsed[entity] = Vehicle(value)
             except (TypeError, ValueError) as error:
                 raise ValueError("every official vehicle must be DMSO or Water") from error
-        return cls(assignments=MappingProxyType(parsed))
+        return cls(
+            assignments=MappingProxyType(parsed),
+            _verification_seal=_VEHICLE_MAP_SEAL,
+        )
 
     def resolve(self, treated_entity: Hashable) -> Vehicle:
+        if self._verification_seal is not _VEHICLE_MAP_SEAL:
+            raise ValueError(
+                "official pairing requires a verified chemical-to-vehicle map"
+            )
         try:
             return self.assignments[treated_entity]
         except KeyError as error:
@@ -52,9 +104,48 @@ def match_official_controls(
     vehicle_map: OfficialVehicleMap,
     sample_id_column: str,
     chemical_column: str,
+    match_columns: Union[Sequence[str], OfficialControlMatchColumns],
+) -> Tuple[MeasurementMatrix, MeasurementMatrix]:
+    """Match controls under the sealed seven-role official context contract."""
+
+    if isinstance(match_columns, OfficialControlMatchColumns):
+        selected_match_columns = match_columns.physical_columns()
+    else:
+        selected_match_columns = tuple(match_columns)
+        missing_roles = [
+            column
+            for column in OFFICIAL_CONTROL_MATCH_COLUMNS
+            if column not in selected_match_columns
+        ]
+        if missing_roles:
+            raise ValueError(
+                "official pairing requires all seven official control-match roles "
+                f"{OFFICIAL_CONTROL_MATCH_COLUMNS}; missing {tuple(missing_roles)}"
+            )
+    return match_exploratory_controls(
+        metadata,
+        endpoint,
+        protein_ids=protein_ids,
+        treated_sample_ids=treated_sample_ids,
+        vehicle_map=vehicle_map,
+        sample_id_column=sample_id_column,
+        chemical_column=chemical_column,
+        match_columns=selected_match_columns,
+    )
+
+
+def match_exploratory_controls(
+    metadata: pd.DataFrame,
+    endpoint: np.ndarray,
+    *,
+    protein_ids: Sequence[Hashable],
+    treated_sample_ids: Sequence[Hashable],
+    vehicle_map: OfficialVehicleMap,
+    sample_id_column: str,
+    chemical_column: str,
     match_columns: Sequence[str],
 ) -> Tuple[MeasurementMatrix, MeasurementMatrix]:
-    """Build treated/control matrices from an explicit official vehicle map.
+    """Exploratory exact-key matcher that may use a declared key subset.
 
     Controls are selected only when vehicle and every requested metadata key
     match.  Multiple valid control rows are averaged per protein using only
@@ -62,8 +153,12 @@ def match_official_controls(
     the treated sample identities so the strict pairer can verify alignment.
     """
 
+    selected_match_columns = tuple(match_columns)
+    if not selected_match_columns:
+        raise ValueError("exploratory pairing needs at least one exact-match column")
+
     values = np.asarray(endpoint, dtype=np.float64)
-    required = (sample_id_column, chemical_column, *tuple(match_columns))
+    required = (sample_id_column, chemical_column, *selected_match_columns)
     missing = [column for column in required if column not in metadata.columns]
     if missing:
         raise ValueError(f"metadata is missing control-match columns: {missing}")
@@ -88,11 +183,11 @@ def match_official_controls(
         source_row = by_id[sample_id]
         treated_values[output_row] = values[source_row]
         treated_metadata = metadata.iloc[source_row]
-        if any(pd.isna(treated_metadata[column]) for column in match_columns):
+        if any(pd.isna(treated_metadata[column]) for column in selected_match_columns):
             raise ValueError("treated control-match keys must be non-missing")
         vehicle = vehicle_map.resolve(treated_metadata[chemical_column])
         candidate = metadata[chemical_column].eq(vehicle.value)
-        for column in match_columns:
+        for column in selected_match_columns:
             candidate &= metadata[column].eq(treated_metadata[column])
         candidate_rows = np.flatnonzero(candidate.to_numpy(dtype=bool))
         if len(candidate_rows) == 0:

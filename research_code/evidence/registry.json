@@ -321,6 +321,38 @@
       ]
     },
     {
+      "experiment_id": "pubchem-structure-confirmatory-v1",
+      "status": "VALIDATED_REJECTED",
+      "golden": true,
+      "source": {"root": "documents", "path": "research_code/evidence/pubchem-structure-confirmatory-v1/RESULTS.md", "kind": "aggregate_markdown"},
+      "source_sha256": "4f1837c02604874f58ea1abe6d5659107ba2931fe4ebec7d2717afaa1c8172d4",
+      "replacement": null,
+      "validity": "Release-safe aggregate evidence for the independently replayed PubChem-first confirmatory structure study. Strict unique collision-free coverage increases to 25 of 37 with 12 explicit context-only fallbacks, but Tanimoto transfer, CPA-style additive Ridge, and low-rank structure-context bilinear Ridge all fail the frozen promotion gate. The Adapter verifies anonymous aggregate scalars only; it does not ship entity mappings, fold rows, predictions, fitted parameters or a private-study training entrypoint.",
+      "persistence": "PERSISTENT_RELEASE_SAFE",
+      "expected_aggregate_metrics": [
+        {"name": "current_release_strict_modeled_coordinates", "value": 4422, "tolerance": 0, "locator": {"kind": "regex", "pattern": "Strict train missing fraction below 80%: [*][*](?P<value>4,422)[*][*] eligible"}},
+        {"name": "current_release_exact_eighty_ties", "value": 0, "tolerance": 0, "locator": {"kind": "regex", "pattern": "exact-80% ties: [*][*](?P<value>0)[*][*]"}},
+        {"name": "all_itt_treated_entities", "value": 37, "tolerance": 0, "locator": {"kind": "regex", "pattern": "Primary all-ITT population: [*][*](?P<value>37)[*][*] treated entities"}},
+        {"name": "strict_structure_covered_entities", "value": 25, "tolerance": 0, "locator": {"kind": "regex", "pattern": "structure coverage: [*][*](?P<value>25) covered[*][*]"}},
+        {"name": "strict_structure_missing_entities", "value": 12, "tolerance": 0, "locator": {"kind": "regex", "pattern": "[*][*](?P<value>12) explicit missing/fallback[*][*]"}},
+        {"name": "whole_chemical_m0_raw_fc_pcc", "value": 0.255488, "tolerance": 1e-12, "locator": {"kind": "regex", "pattern": "[|] Whole chemical [|] (?P<value>0[.]255488) [|]"}},
+        {"name": "whole_chemical_c0_raw_fc_pcc", "value": 0.243875, "tolerance": 1e-12, "locator": {"kind": "regex", "pattern": "[|] Whole chemical [|] 0[.]255488 [|] (?P<value>0[.]243875) [|]"}},
+        {"name": "whole_chemical_m1_raw_fc_pcc", "value": 0.251053, "tolerance": 1e-12, "locator": {"kind": "regex", "pattern": "[|] Whole chemical [|] 0[.]255488 [|] 0[.]243875 [|] (?P<value>0[.]251053) [|]"}},
+        {"name": "whole_chemical_m2_raw_fc_pcc", "value": 0.248201, "tolerance": 1e-12, "locator": {"kind": "regex", "pattern": "[|] Whole chemical [|] 0[.]255488 [|] 0[.]243875 [|] 0[.]251053 [|] (?P<value>0[.]248201) [|]"}},
+        {"name": "whole_chemical_m3_raw_fc_pcc", "value": 0.247908, "tolerance": 1e-12, "locator": {"kind": "regex", "pattern": "[|] Whole chemical [|] 0[.]255488 [|] 0[.]243875 [|] 0[.]251053 [|] 0[.]248201 [|] (?P<value>0[.]247908) [|]"}},
+        {"name": "whole_kbio_m0_raw_fc_pcc", "value": 0.337380, "tolerance": 1e-12, "locator": {"kind": "regex", "pattern": "[|] Whole Kbio [|] (?P<value>0[.]337380) [|]"}},
+        {"name": "whole_kbio_c0_raw_fc_pcc", "value": 0.246348, "tolerance": 1e-12, "locator": {"kind": "regex", "pattern": "[|] Whole Kbio [|] 0[.]337380 [|] (?P<value>0[.]246348) [|]"}},
+        {"name": "whole_kbio_m1_raw_fc_pcc", "value": 0.255678, "tolerance": 1e-12, "locator": {"kind": "regex", "pattern": "[|] Whole Kbio [|] 0[.]337380 [|] 0[.]246348 [|] (?P<value>0[.]255678) [|]"}},
+        {"name": "whole_kbio_m2_raw_fc_pcc", "value": 0.277940, "tolerance": 1e-12, "locator": {"kind": "regex", "pattern": "[|] Whole Kbio [|] 0[.]337380 [|] 0[.]246348 [|] 0[.]255678 [|] (?P<value>0[.]277940) [|]"}},
+        {"name": "whole_kbio_m3_raw_fc_pcc", "value": 0.275726, "tolerance": 1e-12, "locator": {"kind": "regex", "pattern": "[|] Whole Kbio [|] 0[.]337380 [|] 0[.]246348 [|] 0[.]255678 [|] 0[.]277940 [|] (?P<value>0[.]275726) [|]"}},
+        {"name": "promoted_candidates", "value": 0, "tolerance": 0, "locator": {"kind": "regex", "pattern": "Promoted candidates: [*][*](?P<value>0)[*][*] of [*][*]3[*][*]"}},
+        {"name": "independent_fold_metric_rows", "value": 300, "tolerance": 0, "locator": {"kind": "regex", "pattern": "Fold/model/tier rows independently checked: [*][*](?P<value>300)[*][*]"}},
+        {"name": "independent_summary_rows", "value": 60, "tolerance": 0, "locator": {"kind": "regex", "pattern": "Model summary rows independently checked: [*][*](?P<value>60)[*][*]"}},
+        {"name": "independent_baseline_pairs", "value": 576, "tolerance": 0, "locator": {"kind": "regex", "pattern": "Candidate-versus-baseline paired checks: [*][*](?P<value>576)[*][*]"}},
+        {"name": "independent_permutation_pairs", "value": 216, "tolerance": 0, "locator": {"kind": "regex", "pattern": "Real-versus-matched-permutation paired checks: [*][*](?P<value>216)[*][*]"}}
+      ]
+    },
+    {
       "experiment_id": "chemcpa-nonlinear-v1-v2",
       "status": "VALIDATED_REJECTED",
       "golden": true,

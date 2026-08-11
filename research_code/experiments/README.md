@@ -28,6 +28,10 @@ composition v1/v2 pilots under `../evidence/chemcpa-nonlinear-v1-v2/`. V1 is a
 measured-control conditional diagnostic; v2 is a no-control development
 follow-up. The molecular branch is rejected, C0 remains research-only, and the
 Adapter does not claim an exact CPA/chemCPA reproduction or private retraining.
+`pubchem_structure_confirmatory.py` replays the later PubChem-first confirmation
+under `../evidence/pubchem-structure-confirmatory-v1/`. It verifies only
+anonymous all-37 means, coverage/count contracts and the frozen rejection of all
+three structure candidates; it does not expose the private training runner.
 
 List all registered experiments:
 

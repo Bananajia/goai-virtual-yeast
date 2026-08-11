@@ -24,7 +24,14 @@ from .controls import (
     ResponseEstimate,
 )
 from .submission import SubmissionContract
-from .vehicle import OfficialVehicleMap, Vehicle, match_official_controls
+from .vehicle import (
+    OFFICIAL_CONTROL_MATCH_COLUMNS,
+    OfficialControlMatchColumns,
+    OfficialVehicleMap,
+    Vehicle,
+    match_exploratory_controls,
+    match_official_controls,
+)
 
 __all__ = [
     "GroupedOODSplitter",
@@ -42,7 +49,10 @@ __all__ = [
     "ResponseEstimate",
     "SubmissionContract",
     "OfficialVehicleMap",
+    "OFFICIAL_CONTROL_MATCH_COLUMNS",
+    "OfficialControlMatchColumns",
     "Vehicle",
+    "match_exploratory_controls",
     "match_official_controls",
     "Log2ProteomeTransformer",
     "MissingnessFilter",

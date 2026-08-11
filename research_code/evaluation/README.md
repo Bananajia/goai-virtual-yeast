@@ -3,6 +3,20 @@
 Every live experiment imports this folder. No experiment may define a local
 Pearson, RMSE, residual-centering, variance-ratio, or DEP scorer.
 
+## Official-facing scorecard contract
+
+`official_scorecard.py` declares the four organizer routes
+`test_chem_only`, `test_strain_only`, `test_both`, and `test_time`. It exposes
+the six published module weights (20/25/20/20/10/5), routes only the metric
+families applicable to each split, requires the strict `abs(Raw-FC) > 1` DEP
+policy, and records endpoint, paired-control, and DEP coverage denominators.
+It does **not** compute a weighted or "official" total because the material does
+not specify a reproducible within-module aggregation.
+
+The reproducibility/compliance item remains a separate gate. The separately
+announced 5% open-source contribution dimension is disclosed independently and
+is not added to the six-module table by this implementation.
+
 ## Scopes
 
 - `endpoint_*`: every cell where truth and prediction are both finite.
@@ -50,11 +64,17 @@ truth and prediction subtract the same control:
 
 `ResidualReferenceMode.FIT_FROZEN` is the official-facing default. Its sealed
 references bind evaluation replicate IDs, protein IDs, group labels, and their
-orders; same-shaped but misordered references fail.
+orders; same-shaped but misordered references fail. Building the references
+also requires provenance sealed by `verify_train_only_provenance()`, exact fit
+replicate IDs, and a zero-overlap check against evaluation IDs. A caller cannot
+obtain a `fit_only=true` contract by omitting or manually constructing this
+provenance.
 `EVALUATION_CENTERED` is retained only to replay historical internal diagnostics;
 it centers on the held cohort and cannot be compared as if it were the official
 residual. Evaluation centering uses exactly the truth-prediction common mask and
 requires at least two finite conditions per `group × protein`.
+`NOT_APPLICABLE` is restricted to `test_both`/`test_time`, whose published
+module uses absolute fidelity plus original Raw-FC rather than a residual mean.
 
 ## Condition variance ratio
 

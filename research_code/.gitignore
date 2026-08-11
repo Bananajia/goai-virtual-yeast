@@ -8,3 +8,7 @@ __pycache__/
 private-data/
 raw-data/
 *.zip
+*.npz
+prediction.csv
+artifact/
+artifacts/

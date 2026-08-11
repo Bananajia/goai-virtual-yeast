@@ -15,10 +15,24 @@ from .dep import (
 )
 from .gates import GateDecision, MetricCriterion, PromotionGate
 from .public_axes import evaluate_axis_predictions
+from .official_scorecard import (
+    COMPLIANCE_GATE,
+    OFFICIAL_MODULE_WEIGHTS_PERCENT,
+    OPEN_SOURCE_CONTRIBUTION,
+    MetricFamily,
+    OfficialModule,
+    OfficialScorecard,
+    OfficialScorecardResult,
+    SplitKind,
+    SplitRoute,
+    route_for_split,
+)
 from .residuals import (
     FrozenResidualReferences,
     ResidualReferenceMode,
+    TrainOnlyProvenance,
     fit_frozen_residual_references,
+    verify_train_only_provenance,
 )
 
 __all__ = [
@@ -37,5 +51,17 @@ __all__ = [
     "high_response_metrics",
     "FrozenResidualReferences",
     "ResidualReferenceMode",
+    "TrainOnlyProvenance",
     "fit_frozen_residual_references",
+    "verify_train_only_provenance",
+    "COMPLIANCE_GATE",
+    "OFFICIAL_MODULE_WEIGHTS_PERCENT",
+    "OPEN_SOURCE_CONTRIBUTION",
+    "MetricFamily",
+    "OfficialModule",
+    "OfficialScorecard",
+    "OfficialScorecardResult",
+    "SplitKind",
+    "SplitRoute",
+    "route_for_split",
 ]

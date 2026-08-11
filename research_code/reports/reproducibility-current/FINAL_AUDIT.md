@@ -1,6 +1,6 @@
 # Final independent audit
 
-Date: 2026-08-10
+Date: 2026-08-11
 Verdict: **PASS WITH DECLARED EXTERNAL DEPENDENCIES**
 
 ## Verified
@@ -16,22 +16,30 @@ Verdict: **PASS WITH DECLARED EXTERNAL DEPENDENCIES**
 - Official vehicle matching, train-only target roles, strict `<80%`
   missingness, fit-frozen residual identity/order, fixed `|FC|>1` DEP, and
   submission ID/feature/log2/finite contracts have dedicated negative tests.
+- The official-facing scorecard routes the six published modules and their
+  20/25/20/20/10/5 weights by split, but deliberately does not synthesize a
+  total score because no reproducible within-module aggregation was published.
+  Reproducibility/compliance remains a gate and open-source contribution is
+  disclosed separately.
 - Aggregate reporting validates scalar metrics, non-negative counts, boolean
   contracts, portable provenance and safe notes before atomic output.
-- Full research archive: 81/81 unified tests passed. The final clean public
-  checkout discovered the same 81 tests: 78 passed and 3 optional
-  missing-history tests skipped explicitly.
-- 76 Python files compiled.
+- Current source tree: 106/106 unified tests passed.
+- 81 Python files compiled.
 - `uv lock --check` resolved 27 packages.
-- 20 experiments are discoverable through the common CLI.
-- 22/22 golden evidence records and 75/75 frozen metrics replayed; zero
+- 21 experiments are discoverable through the common CLI.
+- 23/23 golden evidence records and 95/95 frozen metrics replayed; zero
   invalidated records were accepted as golden.
-- In the clean release, the three bundled aggregate Adapters replayed 3/3
-  records and 45/45 frozen scalars.
+- The four release-safe aggregate Adapters (loss, structure, nonlinear
+  composition and PubChem/RDKit confirmation) replayed 4/4 records and 65/65
+  frozen scalars. The PubChem Adapter ships no molecular identities, structures,
+  fingerprints, predictions or weights.
 - Fixed-seed synthetic mean/Ridge results match the saved artifacts.
 - The offline public RNA result is deterministic.
 - The local Qwen six-case pilot correctly returned `BLOCKED` after invalid
   structured output and did not retain partial metrics.
+- LIVE Metadata Ridge train/predict is validated only on deterministic tiny
+  fixtures and failure paths in this snapshot. No formal private competition
+  data retraining or scoring is claimed.
 - No competition matrix was read during this independent audit.
 
 ## External dependencies before an official full-data replay

@@ -19,6 +19,9 @@ from experiments.local_llm_mechanism import build_experiment as build_local_llm
 from experiments.loss_ablation import build_experiment as build_loss_ablation
 from experiments.multiobjective_highresponse import build_experiment as build_multiobjective
 from experiments.named_pathway_tokens import build_experiment as build_named_pathways
+from experiments.pubchem_structure_confirmatory import (
+    build_experiment as build_pubchem_structure_confirmatory,
+)
 from experiments.static_prefix import build_experiment as build_static_prefix
 from experiments.strain_genome_cnv import build_experiment as build_strain_genome
 from experiments.structure_generalization import (
@@ -59,6 +62,7 @@ class ExperimentRegistry:
                 build_strain_genome(),
                 build_structure_generalization(),
                 build_chemcpa_nonlinear(),
+                build_pubchem_structure_confirmatory(),
                 build_static_prefix(),
                 build_threshold_policy(),
             )

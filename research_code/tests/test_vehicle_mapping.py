@@ -70,6 +70,12 @@ class VehicleMappingTest(unittest.TestCase):
                 "sample_ID": ["t1", "c1"],
                 "chemical": ["drug-a", "Water"],
                 "source": ["S", "S"],
+                "strain": ["Y", "Y"],
+                "medium": ["M", "M"],
+                "temperature": [30, 30],
+                "time": [60, 60],
+                "instrument": ["I", "I"],
+                "plate": ["P", "P"],
             }
         )
         values = np.asarray([[11.0], [10.0]])
@@ -82,7 +88,15 @@ class VehicleMappingTest(unittest.TestCase):
                 vehicle_map=OfficialVehicleMap.from_mapping({"drug-a": "DMSO"}),
                 sample_id_column="sample_ID",
                 chemical_column="chemical",
-                match_columns=("source",),
+                match_columns=(
+                    "source",
+                    "strain",
+                    "medium",
+                    "temperature",
+                    "time",
+                    "instrument",
+                    "plate",
+                ),
             )
 
 

@@ -1,15 +1,16 @@
 # Legacy aggregate evidence replay
 
-Date: 2026-08-10
+Date: 2026-08-11
 
 ## Outcome
 
-The registry contains 25 records: 22 golden aggregate sources, one invalidated
-source and two explicitly source-missing router lineages.
+The registry contains 26 records: 23 golden aggregate sources, one invalidated
+source and two explicitly source-missing router lineages. One golden record is
+an identifiability stop that correctly read zero official numeric rows.
 
 | Replay set | Records | Frozen metrics | Result |
 |---|---:|---:|---|
-| Golden aggregate evidence | 22 records | 75 | PASS |
+| Golden aggregate evidence | 23 records | 95 | PASS |
 | Invalidated evidence used as golden | 0 | 0 | PASS |
 
 The invalidated `control-affine-fullpanel-v1` source is retained
@@ -46,6 +47,12 @@ is not a submission feature-contract claim.
 long-term Documents project on 2026-08-10 without changing the workspace
 copies. Their aggregate hashes are unchanged and now replay from the persistent
 root.
+
+Release-safe current-study evidence now also includes the PubChem/RDKit
+structure confirmation. Its Adapter verifies 20 frozen scalars for the 37-drug
+primary cohort, 25 strict structures, 12 exact missing fallbacks, two OOD
+scenarios and all three rejected structure candidates. It does not contain an
+entity crosswalk, SMILES, InChIKey, fingerprints, predictions or weights.
 
 ## Privacy and failure behavior
 

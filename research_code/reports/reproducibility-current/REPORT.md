@@ -1,6 +1,6 @@
 # 当前代码整理与复现报告
 
-日期：2026-08-10
+日期：2026-08-11
 
 参赛队伍：**小米蕉队**
 
@@ -10,11 +10,11 @@
 
 本轮复现分成三种证据，不能混为一谈：
 
-1. **统一代码的可执行复现：** 完整研究归档中 81 项单元/合同测试全部通过；最终干净发布仓库同样发现 81 项，其中 78 项通过，3 项因不分发可选历史实验树而明确跳过。76 个发布层 Python 文件编译通过。
-2. **历史结论的证据回放：** 22 份 golden 聚合证据的 SHA-256 与 75 个冻结指标全部复现，未读取私有矩阵或逐样本预测。
+1. **统一代码的可执行复现：** 当前源代码树 106 项单元/合同测试全部通过，81 个发布层 Python 文件编译通过。最终干净发布仓库应在组装完成后单独记录，不能沿用旧 checkout 的测试数。
+2. **历史结论的证据回放：** 23 份 golden 聚合证据的 SHA-256 与 95 个冻结指标全部复现，未读取私有矩阵或逐样本预测；其中四个 release-safe 聚合 Adapter 为 4/4 records、65/65 scalars。
 3. **端到端合成验证：** 固定 seed 7 的平均值模型正确呈现条件方差塌缩；固定 seed 11 的 Metadata Ridge 在已知合成机制上恢复 Raw-FC PCC 0.999994、条件方差比 0.999841、Endpoint RMSE 0.003759。
 
-这证明新 Interface、统一评测和证据链可以复现。它不等于重新训练了全部历史模型；历史运行没有保存逐样本预测，且两个最终路由名称缺少可执行源码，因此这两项不能伪装成源码级复现。
+这证明新 Interface、统一评测和证据链可以复现。它不等于重新训练了全部历史模型，也不等于已在私有比赛矩阵上正式重跑 LIVE Metadata Ridge；历史运行没有保存逐样本预测，且两个最终路由名称缺少可执行源码，因此这些边界不能伪装成源码级复现。
 
 ## 目录与职责
 
@@ -30,7 +30,7 @@
 | `evidence/` | 冻结来源、哈希、有效性、替代关系和代码盘点 | `registry.json`、`code_inventory.json` |
 | `tests/` | 缺失、泄漏、分组、指标边界和隐私回归测试 | Python `unittest` |
 
-历史树仍包含 99 个实验目录、440 个 Python 文件和 119 个测试文件。它们没有被批量改写；新层通过 Adapter 引用已验证证据，避免为了“整理”而破坏原始实验谱系。
+历史树仍包含 101 个实验目录、448 个 Python 文件和 121 个测试文件。它们没有被批量改写；新层通过 Adapter 引用已验证证据，避免为了“整理”而破坏原始实验谱系。
 
 ## 统一评测的关键修正
 
@@ -44,11 +44,12 @@
 - Endpoint 同时报告 all-cell 与 paired-cell scope；Raw-FC、残差、VR 和 DEP 只用 paired scope。
 - 官方 DEP 使用固定 `abs(log2 FC) > 1`；只有 K 由 outer-fit 数据拟合，并在 baseline、candidate 和负对照之间共享。历史分位数阈值仅为敏感性。
 - paired scope 下 Endpoint RMSE 与 Raw-FC RMSE 必然相等，因为二者减去同一个实测 control；报告不再把它们描述成两条独立误差信号。
+- `OfficialScorecard` 按 split 路由公开的六个评分模块及 20/25/20/20/10/5 权重，但不合成“官方总分”：现有材料没有给出可复现的模块内聚合公式。复现/合规仍是门槛，另行公布的开源贡献项独立披露。
 - 聚合报告在创建目录或文件前验证 metrics 只能是标量、counts 只能是非负整数、contract 只能是布尔值，并拒绝绝对路径和 private-data 文本；JSON 与 Markdown 在内存中完成后再原子写出。
 
 ## 历史正式结果回放
 
-证据回放结果：22/22 个 golden records 通过，75/75 个冻结指标一致，0 个已作废结果被当作 golden。
+证据回放结果：23/23 个 golden records 通过，95/95 个冻结指标一致，0 个已作废结果被当作 golden。四个 release-safe 聚合 Adapter（loss、structure、nonlinear composition、PubChem/RDKit confirmatory）独立核验 4/4 records、65/65 scalars。
 
 本轮新增了正式 baseline 套件的冻结回放：
 
@@ -64,6 +65,14 @@
 | 解读材料报告数 | 4,232 modeled + 1,011 filtered | 不能由材料所列公式在当前 release 复现，不作机器常量；提交列仍由最新官方模板决定 |
 
 `control-affine-fullpanel-v1` 及旧 response-threshold 结果的无效部分继续保留作审计，但不会进入 golden 结论。现有历史 context/drug residual 与高响应聚合结果没有逐样本预测可供新版 fit-frozen、固定阈值 evaluator 重算，因此仍按旧内部协议标注，不能据此估算官方总分。
+
+### PubChem/RDKit 结构确认
+
+正式聚合 Adapter 已纳入 37 个药物的确认性实验：25 个通过严格结构解析，12 个走逐项完全缺失回退；三种结构候选均未通过晋级门。Adapter 核验 20 个冻结标量，但不分发实体 crosswalk、SMILES、InChIKey、fingerprint、逐样本预测或权重。这个结果说明结构覆盖从旧版本改善，但没有证明结构特征带来稳定的药物特异增益，因此没有把候选强行晋级。
+
+### LIVE Metadata Ridge 边界
+
+`train-metadata-ridge` / `predict-metadata-ridge` 的数据合同、train-only 拟合、未知类别、artifact 与 submission 模板路径已经由 tiny fixture 和失败路径测试覆盖。当前快照没有在私有正式矩阵上重新训练、推理并评分；上文 seed 11 指标仅为可恢复合成机制的端到端测试，不能写成正式比赛结果。
 
 ## Future public-only 小实验
 
@@ -96,6 +105,7 @@ Provider 只接受固定 schema 的公共事实与已锁来源，输出 3–8 �
 - `chemical-router-v3` 与 `unified-router-final-v3-scoped` 只有叙述和私有聚合线索，在持久项目与工作区都没有找到对应源码，状态固定为 `BLOCKED_SOURCE_MISSING`。若重写，只能标记 reconstruction，不能冒充原实现。
 - 大多数历史隐私协议没有保存逐样本预测，所以无法仅靠 aggregate CSV 用新版 evaluator 重算每个 cell；必须在未来新的 train-only OOF 运行中同时调用 legacy 与 canonical scorer 做 reconciliation。
 - 本轮没有读取 fixed validation/test 真值，没有重新调参，也没有通过网络发送比赛数据。
+- LIVE Metadata Ridge 当前只有 tiny fixture 级端到端验证；正式私有数据重跑仍待具备可合法使用的数据与最新版提交模板后执行。
 - 正式重放仍依赖组委会提供机器可读 vehicle 映射和最新版 submission feature contract；代码对两者缺失均采用 fail-closed，不用 pooled control 或自定列宽冒充正式结果。
 - public-only mini fixture 的许可和跨物种边界必须保留；它目前不进入比赛模型。
 
@@ -110,6 +120,9 @@ uv run --locked python research_cli.py run \
   legacy_evidence_replay --scope aggregate-only \
   --data-root .. \
   --output reports/reproducibility-current/legacy-evidence
+uv run --locked python research_cli.py run \
+  pubchem_structure_confirmatory_evidence --scope aggregate-only \
+  --output reports/reproducibility-current/pubchem-structure-confirmatory-replay
 uv run --locked python research_cli.py run \
   synthetic_mean_baseline --scope synthetic \
   --seed 7 \
