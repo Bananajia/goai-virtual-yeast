@@ -1,0 +1,93 @@
+{
+  "schema_version": "1.0",
+  "updated_utc": "2026-08-11",
+  "resources": [
+    {
+      "id": "goai_competition_authorized_data",
+      "source": "GOAI 赛道三组委会参赛数据",
+      "locator": "runtime CLI paths: --metadata, --proteome, --submission-template",
+      "status": "used_by_live_metadata_ridge_local_only",
+      "version": "current authorized competition release",
+      "license_boundary": "competition-authorized local use; not redistributed"
+    },
+    {
+      "id": "pubchem_compound_structure",
+      "source": "PubChem",
+      "locator": "https://pubchem.ncbi.nlm.nih.gov/",
+      "status": "coverage_frozen_25_of_37_and_train_only_confirmatory_no_promotion_not_live_baseline",
+      "version": "PubChem PUG REST audit 2026-08-11; RDKit 2025.09.2",
+      "license_boundary": "original PubChem terms; no payload redistributed by this manifest"
+    },
+    {
+      "id": "rdkit_descriptors",
+      "source": "RDKit",
+      "locator": "research_code/pyproject.toml#project.optional-dependencies.public and research_code/uv.lock",
+      "status": "used_by_coverage_audit_and_train_only_confirmatory_not_called_by_live_metadata_ridge",
+      "version": "2025.09.2 in frozen coverage audit; release dependency resolved by uv.lock",
+      "license_boundary": "original RDKit license"
+    },
+    {
+      "id": "yeast_1011_genomes",
+      "source": "1011 yeast genomes project / Peter public strain resources",
+      "locator": "https://1002genomes.u-strasbg.fr/files/ ; aggregate evidence: research_code/evidence/registry.json#strain-genome-cnv-v1",
+      "status": "used_in_aggregate_private_pilot_not_live_baseline",
+      "version": "Peter et al. 2018, 1,011 isolates",
+      "source_sha256": {
+        "1011LossOfFunction.xls.gz": "067327e1970c48f278dd08abb18f140622458829a6abc320207245c8c4b61c34",
+        "genesMatrix_Frameshift.tab.gz": "110debdf846e48ff71d21c69ec66b1dfde0239be3e199ba432544d218634bee5",
+        "genesMatrix_PresenceAbsence.tab.gz": "63b62d6761c378f71360a259add9ad3317befb27cfa45944d0b11433766bf7fc",
+        "genesMatrix_CopyNumber.tab.gz": "d22fe0a2024921163739553afb612e97e229c99b51a4301021c2433e11b2ee4d",
+        "1011DistanceMatrixBasedOnSNPs.tab.gz": "140da4e5193584c01e60c554a2ba5075a542d925be540afe7c7a92b7377af928"
+      },
+      "license_boundary": "bulk files carry no machine-readable redistribution license; research-use only, and release ships derived aggregates only pending source-term confirmation"
+    },
+    {
+      "id": "sgd_s288c_dhy210_proxy",
+      "source": "Saccharomyces Genome Database S288C reference genome",
+      "locator": "https://www.yeastgenome.org/",
+      "status": "allowed_proxy_not_yet_frozen_for_live_baseline",
+      "version": null,
+      "license_boundary": "SGD source terms; proxy identity must remain explicit"
+    },
+    {
+      "id": "chebi_structure_pilot",
+      "source": "ChEBI",
+      "locator": "research_code/evidence/structure-generalization-v1/RESULTS.md",
+      "status": "aggregate_pilot_only_not_live_model",
+      "version": "release 253",
+      "license_boundary": "original ChEBI terms; structures are not redistributed here"
+    },
+    {
+      "id": "string_stitch_and_public_strain_pilots",
+      "source": "STRING, STITCH and public yeast strain resources",
+      "locator": "research_code/evidence/registry.json",
+      "status": "aggregate_evidence_only_sources_not_shipped",
+      "version": null,
+      "license_boundary": "original source terms; version manifests required before LIVE reuse"
+    },
+    {
+      "id": "l1000fwd_six_fixture",
+      "source": "L1000FWD",
+      "locator": "research_code/future_experiments/public_rna_lincs_mini/fixtures/manifest.json",
+      "status": "public_only_fixture_not_live_competition_model",
+      "version": "fixture manifest SHA-256 pinned",
+      "license_boundary": "academic/non-profit source terms; fixture is not assigned a new data license"
+    },
+    {
+      "id": "local_qwen3_8b_gemma_12b_competition_diagnostic",
+      "source": "local open-weight model tags qwen3:8b and gemma4:12b",
+      "locator": "research_code/evidence/registry.json#dual-local-llm-mechanism-v1",
+      "status": "competition_train_only_aggregate_diagnostic_rejected_not_live_baseline",
+      "version": "qwen3:8b and gemma4:12b; weights remain outside release payload",
+      "license_boundary": "model weights not redistributed; original model licenses apply"
+    },
+    {
+      "id": "local_qwen3_8b_public_rna_smoke",
+      "source": "local Ollama model tag qwen3:8b",
+      "locator": "research_code/reports/public-rna-local-ollama-qwen3-summary.md",
+      "status": "blocked_public_only_smoke_not_live_competition_model",
+      "version": "model digest and Ollama version recorded in linked report",
+      "license_boundary": "model weights not redistributed; original model license applies"
+    }
+  ]
+}

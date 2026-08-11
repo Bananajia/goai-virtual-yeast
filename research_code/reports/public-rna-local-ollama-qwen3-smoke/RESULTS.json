@@ -1,0 +1,23 @@
+{
+  "counts": {
+    "anonymous_cases_attempted": 1,
+    "anonymous_cases_evaluated": 1
+  },
+  "metrics": {
+    "macro_axis_cosine": 0.09491579957524991,
+    "pooled_axis_pearson": 0.08856148855400955,
+    "predicted_axis_precision": 0.3333333333333333,
+    "signed_axis_accuracy": 0.2,
+    "top_axis_hit_rate": 0.0,
+    "truth_axis_recall": 0.2
+  },
+  "provenance": {
+    "fixture_sha256": "3fc762d05132ac92b42e94f3e43f11cd0379738de685e2629b892258bfdbbed6",
+    "model": "qwen3:8b",
+    "model_digest": "500a1f067a9f782620b40bee6f7b0c89e17ae61f686b92c24933e4ca4b2b8b41",
+    "ollama_version": "0.32.5",
+    "protocol_version": "public-l1000fwd-local-ollama-v1",
+    "provider": "ollama-loopback"
+  },
+  "status": "SMOKE_ONLY"
+}

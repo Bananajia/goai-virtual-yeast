@@ -1,0 +1,29 @@
+{
+  "contract": {
+    "aggregate_only": true,
+    "invalidated_excluded_from_golden": true,
+    "private_vectors_persisted": false,
+    "source_hashes_verified": true
+  },
+  "counts": {
+    "records_blocked": 0,
+    "records_failed": 0,
+    "records_passed": 1,
+    "records_requested": 1
+  },
+  "metrics": {
+    "evidence_replay_pass_rate": 1.0,
+    "metrics_verified": 20.0
+  },
+  "name": "pubchem_structure_confirmatory_evidence",
+  "notes": [
+    "Legacy evidence was replayed from aggregate documents only.",
+    "No competition matrix, identity, prediction or protein vector was read."
+  ],
+  "provenance": {
+    "data_scope": "aggregate-only",
+    "seed": 0
+  },
+  "schema_version": "1.0",
+  "status": "GOVERNANCE"
+}

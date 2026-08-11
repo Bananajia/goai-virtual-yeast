@@ -1,0 +1,833 @@
+{
+  "experiment_directories": 101,
+  "families": {
+    "active_calibration": 3,
+    "control_calibration": 4,
+    "knowledge_network": 7,
+    "learned_architecture": 1,
+    "llm_causal_chain": 9,
+    "other": 27,
+    "public_chemistry": 27,
+    "rna_transfer": 3,
+    "statistical_baseline": 4,
+    "strain_genome": 10,
+    "time_dynamics": 6
+  },
+  "generated_from": [
+    "code/experiments",
+    "experiments"
+  ],
+  "python_files": 448,
+  "records": [
+    {
+      "family": "other",
+      "path": "code/experiments/competition-train-hop-adapter",
+      "python_files": 7,
+      "report_files": 0,
+      "status": "UNREGISTERED_LEGACY",
+      "test_files": 4
+    },
+    {
+      "family": "other",
+      "path": "code/experiments/competition-train-hop-calibrated-router",
+      "python_files": 6,
+      "report_files": 0,
+      "status": "UNREGISTERED_LEGACY",
+      "test_files": 3
+    },
+    {
+      "family": "other",
+      "path": "code/experiments/competition-train-package-builder",
+      "python_files": 4,
+      "report_files": 0,
+      "status": "UNREGISTERED_LEGACY",
+      "test_files": 2
+    },
+    {
+      "family": "active_calibration",
+      "path": "code/experiments/official-dataset-local/active_fewshot_calibration",
+      "python_files": 5,
+      "report_files": 0,
+      "status": "UNREGISTERED_LEGACY",
+      "test_files": 2
+    },
+    {
+      "family": "active_calibration",
+      "path": "code/experiments/official-dataset-local/active_fewshot_k4_followup",
+      "python_files": 6,
+      "report_files": 0,
+      "status": "UNREGISTERED_LEGACY",
+      "test_files": 3
+    },
+    {
+      "family": "active_calibration",
+      "path": "code/experiments/official-dataset-local/active_fewshot_recovery",
+      "python_files": 2,
+      "report_files": 0,
+      "status": "UNREGISTERED_LEGACY",
+      "test_files": 1
+    },
+    {
+      "family": "other",
+      "path": "code/experiments/official-dataset-local/analysis",
+      "python_files": 3,
+      "report_files": 0,
+      "status": "UNREGISTERED_LEGACY",
+      "test_files": 0
+    },
+    {
+      "family": "knowledge_network",
+      "path": "code/experiments/official-dataset-local/bindingdb_curated_target_route",
+      "python_files": 9,
+      "report_files": 0,
+      "status": "UNREGISTERED_LEGACY",
+      "test_files": 3
+    },
+    {
+      "family": "knowledge_network",
+      "path": "code/experiments/official-dataset-local/bounded_target_kernel",
+      "python_files": 7,
+      "report_files": 0,
+      "status": "UNREGISTERED_LEGACY",
+      "test_files": 2
+    },
+    {
+      "family": "llm_causal_chain",
+      "path": "code/experiments/official-dataset-local/causal_packet_prior",
+      "python_files": 3,
+      "report_files": 0,
+      "status": "UNREGISTERED_LEGACY",
+      "test_files": 1
+    },
+    {
+      "family": "public_chemistry",
+      "path": "code/experiments/official-dataset-local/cgm_exact_profile_adapter",
+      "python_files": 6,
+      "report_files": 0,
+      "status": "UNREGISTERED_LEGACY",
+      "test_files": 3
+    },
+    {
+      "family": "other",
+      "path": "code/experiments/official-dataset-local/chebi_ontology_role_encoder",
+      "python_files": 5,
+      "report_files": 0,
+      "status": "UNREGISTERED_LEGACY",
+      "test_files": 1
+    },
+    {
+      "family": "other",
+      "path": "code/experiments/official-dataset-local/chemgrid_prior",
+      "python_files": 6,
+      "report_files": 0,
+      "status": "UNREGISTERED_LEGACY",
+      "test_files": 2
+    },
+    {
+      "family": "other",
+      "path": "code/experiments/official-dataset-local/closed_drug_footprint",
+      "python_files": 3,
+      "report_files": 0,
+      "status": "UNREGISTERED_LEGACY",
+      "test_files": 1
+    },
+    {
+      "family": "other",
+      "path": "code/experiments/official-dataset-local/conplex_public_feasibility",
+      "python_files": 0,
+      "report_files": 0,
+      "status": "UNREGISTERED_LEGACY",
+      "test_files": 0
+    },
+    {
+      "family": "llm_causal_chain",
+      "path": "code/experiments/official-dataset-local/direct_gpt_donor_prototype",
+      "python_files": 6,
+      "report_files": 0,
+      "status": "UNREGISTERED_LEGACY",
+      "test_files": 0
+    },
+    {
+      "family": "strain_genome",
+      "path": "code/experiments/official-dataset-local/direct_gpt_signed_strain_prototype",
+      "python_files": 5,
+      "report_files": 0,
+      "status": "UNREGISTERED_LEGACY",
+      "test_files": 0
+    },
+    {
+      "family": "knowledge_network",
+      "path": "code/experiments/official-dataset-local/direct_target_anchor",
+      "python_files": 3,
+      "report_files": 0,
+      "status": "UNREGISTERED_LEGACY",
+      "test_files": 1
+    },
+    {
+      "family": "knowledge_network",
+      "path": "code/experiments/official-dataset-local/direct_target_private_bridge",
+      "python_files": 3,
+      "report_files": 0,
+      "status": "UNREGISTERED_LEGACY",
+      "test_files": 1
+    },
+    {
+      "family": "other",
+      "path": "code/experiments/official-dataset-local/factor_variance_audit",
+      "python_files": 3,
+      "report_files": 0,
+      "status": "UNREGISTERED_LEGACY",
+      "test_files": 1
+    },
+    {
+      "family": "llm_causal_chain",
+      "path": "code/experiments/official-dataset-local/gpt_teacher_ablation_prototype",
+      "python_files": 6,
+      "report_files": 0,
+      "status": "UNREGISTERED_LEGACY",
+      "test_files": 0
+    },
+    {
+      "family": "other",
+      "path": "code/experiments/official-dataset-local/licensed_dti_frontend",
+      "python_files": 3,
+      "report_files": 0,
+      "status": "UNREGISTERED_LEGACY",
+      "test_files": 1
+    },
+    {
+      "family": "llm_causal_chain",
+      "path": "code/experiments/official-dataset-local/local_llm_mechanism_prior",
+      "python_files": 3,
+      "report_files": 0,
+      "status": "UNREGISTERED_LEGACY",
+      "test_files": 1
+    },
+    {
+      "family": "statistical_baseline",
+      "path": "code/experiments/official-dataset-local/metadata_model",
+      "python_files": 1,
+      "report_files": 0,
+      "status": "UNREGISTERED_LEGACY",
+      "test_files": 0
+    },
+    {
+      "family": "other",
+      "path": "code/experiments/official-dataset-local/molformer_encoder_prior",
+      "python_files": 3,
+      "report_files": 0,
+      "status": "UNREGISTERED_LEGACY",
+      "test_files": 1
+    },
+    {
+      "family": "public_chemistry",
+      "path": "code/experiments/official-dataset-local/mosaic_conditional_router",
+      "python_files": 4,
+      "report_files": 0,
+      "status": "UNREGISTERED_LEGACY",
+      "test_files": 2
+    },
+    {
+      "family": "public_chemistry",
+      "path": "code/experiments/official-dataset-local/mosaic_prior",
+      "python_files": 4,
+      "report_files": 0,
+      "status": "UNREGISTERED_LEGACY",
+      "test_files": 1
+    },
+    {
+      "family": "public_chemistry",
+      "path": "code/experiments/official-dataset-local/mosaic_public_audit",
+      "python_files": 4,
+      "report_files": 0,
+      "status": "UNREGISTERED_LEGACY",
+      "test_files": 1
+    },
+    {
+      "family": "public_chemistry",
+      "path": "code/experiments/official-dataset-local/mosaic_pxd_cascade",
+      "python_files": 2,
+      "report_files": 0,
+      "status": "UNREGISTERED_LEGACY",
+      "test_files": 1
+    },
+    {
+      "family": "public_chemistry",
+      "path": "code/experiments/official-dataset-local/mosaic_structure_teacher",
+      "python_files": 4,
+      "report_files": 0,
+      "status": "UNREGISTERED_LEGACY",
+      "test_files": 2
+    },
+    {
+      "family": "public_chemistry",
+      "path": "code/experiments/official-dataset-local/mosaic_supervised_teacher",
+      "python_files": 7,
+      "report_files": 0,
+      "status": "UNREGISTERED_LEGACY",
+      "test_files": 3
+    },
+    {
+      "family": "other",
+      "path": "code/experiments/official-dataset-local/pair_ood_lowrank_anova",
+      "python_files": 6,
+      "report_files": 0,
+      "status": "UNREGISTERED_LEGACY",
+      "test_files": 3
+    },
+    {
+      "family": "public_chemistry",
+      "path": "code/experiments/official-dataset-local/pcba_bioactivity_adapter",
+      "python_files": 11,
+      "report_files": 0,
+      "status": "UNREGISTERED_LEGACY",
+      "test_files": 5
+    },
+    {
+      "family": "strain_genome",
+      "path": "code/experiments/official-dataset-local/peter_gene_prior",
+      "python_files": 3,
+      "report_files": 0,
+      "status": "UNREGISTERED_LEGACY",
+      "test_files": 1
+    },
+    {
+      "family": "strain_genome",
+      "path": "code/experiments/official-dataset-local/peter_genome_prior",
+      "python_files": 3,
+      "report_files": 0,
+      "status": "UNREGISTERED_LEGACY",
+      "test_files": 1
+    },
+    {
+      "family": "strain_genome",
+      "path": "code/experiments/official-dataset-local/peter_graph_prior",
+      "python_files": 6,
+      "report_files": 0,
+      "status": "UNREGISTERED_LEGACY",
+      "test_files": 2
+    },
+    {
+      "family": "other",
+      "path": "code/experiments/official-dataset-local/public_prior_audit",
+      "python_files": 1,
+      "report_files": 0,
+      "status": "UNREGISTERED_LEGACY",
+      "test_files": 0
+    },
+    {
+      "family": "knowledge_network",
+      "path": "code/experiments/official-dataset-local/public_target_bridge_audit",
+      "python_files": 1,
+      "report_files": 0,
+      "status": "UNREGISTERED_LEGACY",
+      "test_files": 0
+    },
+    {
+      "family": "statistical_baseline",
+      "path": "code/experiments/official-dataset-local/public_yeast_bridge_audit",
+      "python_files": 2,
+      "report_files": 0,
+      "status": "UNREGISTERED_LEGACY",
+      "test_files": 0
+    },
+    {
+      "family": "statistical_baseline",
+      "path": "code/experiments/official-dataset-local/pxd_public_bridge",
+      "python_files": 6,
+      "report_files": 0,
+      "status": "UNREGISTERED_LEGACY",
+      "test_files": 1
+    },
+    {
+      "family": "public_chemistry",
+      "path": "code/experiments/official-dataset-local/pxd_structure_phospho_frontend",
+      "python_files": 2,
+      "report_files": 0,
+      "status": "UNREGISTERED_LEGACY",
+      "test_files": 1
+    },
+    {
+      "family": "llm_causal_chain",
+      "path": "code/experiments/official-dataset-local/qwen_bounded_kernel",
+      "python_files": 4,
+      "report_files": 0,
+      "status": "UNREGISTERED_LEGACY",
+      "test_files": 1
+    },
+    {
+      "family": "llm_causal_chain",
+      "path": "code/experiments/official-dataset-local/qwen_confidence_kernel",
+      "python_files": 6,
+      "report_files": 0,
+      "status": "UNREGISTERED_LEGACY",
+      "test_files": 1
+    },
+    {
+      "family": "llm_causal_chain",
+      "path": "code/experiments/official-dataset-local/qwen_confidence_kernel_execution_20260806",
+      "python_files": 6,
+      "report_files": 0,
+      "status": "UNREGISTERED_LEGACY",
+      "test_files": 1
+    },
+    {
+      "family": "other",
+      "path": "code/experiments/official-dataset-local/stitch_prior",
+      "python_files": 8,
+      "report_files": 0,
+      "status": "UNREGISTERED_LEGACY",
+      "test_files": 2
+    },
+    {
+      "family": "strain_genome",
+      "path": "code/experiments/official-dataset-local/strain_ensemble",
+      "python_files": 2,
+      "report_files": 0,
+      "status": "UNREGISTERED_LEGACY",
+      "test_files": 1
+    },
+    {
+      "family": "strain_genome",
+      "path": "code/experiments/official-dataset-local/strain_hierarchical_reliability",
+      "python_files": 3,
+      "report_files": 0,
+      "status": "UNREGISTERED_LEGACY",
+      "test_files": 1
+    },
+    {
+      "family": "strain_genome",
+      "path": "code/experiments/official-dataset-local/strain_router",
+      "python_files": 1,
+      "report_files": 0,
+      "status": "UNREGISTERED_LEGACY",
+      "test_files": 0
+    },
+    {
+      "family": "time_dynamics",
+      "path": "code/experiments/official-dataset-local/time_ensemble",
+      "python_files": 2,
+      "report_files": 0,
+      "status": "UNREGISTERED_LEGACY",
+      "test_files": 1
+    },
+    {
+      "family": "time_dynamics",
+      "path": "code/experiments/official-dataset-local/time_lowrank",
+      "python_files": 1,
+      "report_files": 0,
+      "status": "UNREGISTERED_LEGACY",
+      "test_files": 0
+    },
+    {
+      "family": "time_dynamics",
+      "path": "code/experiments/official-dataset-local/time_uncertainty_gate",
+      "python_files": 3,
+      "report_files": 0,
+      "status": "UNREGISTERED_LEGACY",
+      "test_files": 1
+    },
+    {
+      "family": "other",
+      "path": "code/experiments/official-dataset-local/toxcast_multitask_frontend",
+      "python_files": 3,
+      "report_files": 0,
+      "status": "UNREGISTERED_LEGACY",
+      "test_files": 1
+    },
+    {
+      "family": "strain_genome",
+      "path": "code/experiments/official-dataset-local/training_causal_strain_json",
+      "python_files": 10,
+      "report_files": 0,
+      "status": "UNREGISTERED_LEGACY",
+      "test_files": 1
+    },
+    {
+      "family": "other",
+      "path": "code/experiments/official-dataset-local/unseen_drug_multiview",
+      "python_files": 4,
+      "report_files": 0,
+      "status": "UNREGISTERED_LEGACY",
+      "test_files": 2
+    },
+    {
+      "family": "other",
+      "path": "code/experiments/official-dataset-local/y2t_confidence_router",
+      "python_files": 5,
+      "report_files": 0,
+      "status": "UNREGISTERED_LEGACY",
+      "test_files": 1
+    },
+    {
+      "family": "llm_causal_chain",
+      "path": "code/experiments/official-dataset-local/y2t_llm_axis_grounding",
+      "python_files": 3,
+      "report_files": 1,
+      "status": "UNREGISTERED_LEGACY",
+      "test_files": 1
+    },
+    {
+      "family": "statistical_baseline",
+      "path": "code/experiments/official-dataset-local/y2t_private_bridge",
+      "python_files": 1,
+      "report_files": 0,
+      "status": "UNREGISTERED_LEGACY",
+      "test_files": 0
+    },
+    {
+      "family": "other",
+      "path": "code/experiments/official-dataset-local/y2t_public_profile_gate",
+      "python_files": 6,
+      "report_files": 1,
+      "status": "UNREGISTERED_LEGACY",
+      "test_files": 3
+    },
+    {
+      "family": "other",
+      "path": "code/experiments/official-dataset-local/y2t_response_decoder",
+      "python_files": 3,
+      "report_files": 0,
+      "status": "UNREGISTERED_LEGACY",
+      "test_files": 1
+    },
+    {
+      "family": "public_chemistry",
+      "path": "code/experiments/official-dataset-local/y5k_mosaic_pxd_bridge",
+      "python_files": 4,
+      "report_files": 0,
+      "status": "UNREGISTERED_LEGACY",
+      "test_files": 2
+    },
+    {
+      "family": "public_chemistry",
+      "path": "code/experiments/public-cgm-y5k-knn-confirmatory",
+      "python_files": 4,
+      "report_files": 0,
+      "status": "UNREGISTERED_LEGACY",
+      "test_files": 1
+    },
+    {
+      "family": "public_chemistry",
+      "path": "code/experiments/public-cgm-y5k-mechanistic-front-end",
+      "python_files": 4,
+      "report_files": 0,
+      "status": "UNREGISTERED_LEGACY",
+      "test_files": 1
+    },
+    {
+      "family": "public_chemistry",
+      "path": "code/experiments/public-dutta-formula-response-gate",
+      "python_files": 2,
+      "report_files": 0,
+      "status": "UNREGISTERED_LEGACY",
+      "test_files": 1
+    },
+    {
+      "family": "public_chemistry",
+      "path": "code/experiments/public-dutta-full-structure-gate",
+      "python_files": 2,
+      "report_files": 0,
+      "status": "UNREGISTERED_LEGACY",
+      "test_files": 1
+    },
+    {
+      "family": "public_chemistry",
+      "path": "code/experiments/public-dutta-structure-resolution",
+      "python_files": 4,
+      "report_files": 0,
+      "status": "UNREGISTERED_LEGACY",
+      "test_files": 0
+    },
+    {
+      "family": "public_chemistry",
+      "path": "code/experiments/public-jump-cellpainting-front-end",
+      "python_files": 4,
+      "report_files": 0,
+      "status": "UNREGISTERED_LEGACY",
+      "test_files": 1
+    },
+    {
+      "family": "public_chemistry",
+      "path": "code/experiments/public-jump-to-yeast-cgm-bridge",
+      "python_files": 2,
+      "report_files": 0,
+      "status": "UNREGISTERED_LEGACY",
+      "test_files": 1
+    },
+    {
+      "family": "public_chemistry",
+      "path": "code/experiments/public-jump-to-yeast-torc1-bridge",
+      "python_files": 3,
+      "report_files": 0,
+      "status": "UNREGISTERED_LEGACY",
+      "test_files": 1
+    },
+    {
+      "family": "rna_transfer",
+      "path": "code/experiments/public-lincs-yeast-bridge",
+      "python_files": 1,
+      "report_files": 0,
+      "status": "UNREGISTERED_LEGACY",
+      "test_files": 0
+    },
+    {
+      "family": "public_chemistry",
+      "path": "code/experiments/public-ogbg-molpcba-front-end",
+      "python_files": 4,
+      "report_files": 0,
+      "status": "UNREGISTERED_LEGACY",
+      "test_files": 1
+    },
+    {
+      "family": "public_chemistry",
+      "path": "code/experiments/public-pcba-to-yeast-cgm-residual-gate",
+      "python_files": 2,
+      "report_files": 0,
+      "status": "UNREGISTERED_LEGACY",
+      "test_files": 1
+    },
+    {
+      "family": "public_chemistry",
+      "path": "code/experiments/public-pubchem-cgm-exact-profile-front-end",
+      "python_files": 3,
+      "report_files": 0,
+      "status": "UNREGISTERED_LEGACY",
+      "test_files": 1
+    },
+    {
+      "family": "public_chemistry",
+      "path": "code/experiments/public-pubchem-torc1-mvp",
+      "python_files": 7,
+      "report_files": 0,
+      "status": "UNREGISTERED_LEGACY",
+      "test_files": 1
+    },
+    {
+      "family": "public_chemistry",
+      "path": "code/experiments/public-yeast-cgm-residual-gate",
+      "python_files": 2,
+      "report_files": 0,
+      "status": "UNREGISTERED_LEGACY",
+      "test_files": 1
+    },
+    {
+      "family": "public_chemistry",
+      "path": "code/experiments/public-yeast-cgm-residual-nonlinear-gate",
+      "python_files": 2,
+      "report_files": 0,
+      "status": "UNREGISTERED_LEGACY",
+      "test_files": 1
+    },
+    {
+      "family": "other",
+      "path": "code/experiments/public-yeast-chemical-profile-front-end",
+      "python_files": 3,
+      "report_files": 0,
+      "status": "UNREGISTERED_LEGACY",
+      "test_files": 1
+    },
+    {
+      "family": "control_calibration",
+      "path": "experiments/chemcpa-nonlinear-no-control-v2",
+      "python_files": 6,
+      "report_files": 2,
+      "status": "UNREGISTERED_LEGACY",
+      "test_files": 1
+    },
+    {
+      "family": "other",
+      "path": "experiments/chemcpa-nonlinear-pilot-v1",
+      "python_files": 6,
+      "report_files": 2,
+      "status": "UNREGISTERED_LEGACY",
+      "test_files": 1
+    },
+    {
+      "family": "time_dynamics",
+      "path": "experiments/conditional-latent-uncertainty-v1",
+      "python_files": 6,
+      "report_files": 2,
+      "status": "VALIDATED_REJECTED",
+      "test_files": 1
+    },
+    {
+      "family": "control_calibration",
+      "path": "experiments/control-affine-fullpanel-v1",
+      "python_files": 6,
+      "report_files": 2,
+      "status": "INVALIDATED",
+      "test_files": 1
+    },
+    {
+      "family": "control_calibration",
+      "path": "experiments/control-affine-fullpanel-v2-pairwise",
+      "python_files": 12,
+      "report_files": 4,
+      "status": "VALIDATED_CONDITIONAL",
+      "test_files": 2
+    },
+    {
+      "family": "knowledge_network",
+      "path": "experiments/drug-target-localnet-v1",
+      "python_files": 8,
+      "report_files": 2,
+      "status": "VALIDATED_REJECTED",
+      "test_files": 2
+    },
+    {
+      "family": "llm_causal_chain",
+      "path": "experiments/dual-local-llm-mechanism-v1",
+      "python_files": 6,
+      "report_files": 2,
+      "status": "VALIDATED_REJECTED",
+      "test_files": 1
+    },
+    {
+      "family": "rna_transfer",
+      "path": "experiments/external-knowledge-assets-v1",
+      "python_files": 3,
+      "report_files": 0,
+      "status": "VALIDATED_AUDIT",
+      "test_files": 0
+    },
+    {
+      "family": "rna_transfer",
+      "path": "experiments/external-knowledge-transformer-v1",
+      "python_files": 7,
+      "report_files": 2,
+      "status": "VALIDATED_REJECTED",
+      "test_files": 1
+    },
+    {
+      "family": "other",
+      "path": "experiments/fair-architecture-benchmark-v1",
+      "python_files": 6,
+      "report_files": 2,
+      "status": "VALIDATED_REJECTED",
+      "test_files": 1
+    },
+    {
+      "family": "time_dynamics",
+      "path": "experiments/latent-dynamics-v1",
+      "python_files": 4,
+      "report_files": 2,
+      "status": "VALIDATED_REJECTED",
+      "test_files": 1
+    },
+    {
+      "family": "time_dynamics",
+      "path": "experiments/latent-dynamics-v2-rolling-origin",
+      "python_files": 8,
+      "report_files": 2,
+      "status": "VALIDATED_SCOPED",
+      "test_files": 2
+    },
+    {
+      "family": "other",
+      "path": "experiments/loss-ablation-v1",
+      "python_files": 6,
+      "report_files": 2,
+      "status": "VALIDATED_REJECTED",
+      "test_files": 1
+    },
+    {
+      "family": "learned_architecture",
+      "path": "experiments/multiobjective-highresponse-v1",
+      "python_files": 7,
+      "report_files": 2,
+      "status": "VALIDATED_REJECTED",
+      "test_files": 1
+    },
+    {
+      "family": "knowledge_network",
+      "path": "experiments/named-pathway-tokens-v1",
+      "python_files": 4,
+      "report_files": 2,
+      "status": "VALIDATED_REJECTED",
+      "test_files": 1
+    },
+    {
+      "family": "public_chemistry",
+      "path": "experiments/pubchem-structure-confirmatory-v1",
+      "python_files": 6,
+      "report_files": 2,
+      "status": "VALIDATED_REJECTED",
+      "test_files": 1
+    },
+    {
+      "family": "public_chemistry",
+      "path": "experiments/pubchem-structure-coverage-v1",
+      "python_files": 2,
+      "report_files": 1,
+      "status": "UNREGISTERED_LEGACY",
+      "test_files": 1
+    },
+    {
+      "family": "other",
+      "path": "experiments/public-functional-group-multihead-v1",
+      "python_files": 7,
+      "report_files": 2,
+      "status": "VALIDATED_REJECTED",
+      "test_files": 2
+    },
+    {
+      "family": "other",
+      "path": "experiments/static-prefix-v3-confirmatory",
+      "python_files": 6,
+      "report_files": 2,
+      "status": "VALIDATED_REJECTED",
+      "test_files": 1
+    },
+    {
+      "family": "strain_genome",
+      "path": "experiments/strain-genome-cnv-v1",
+      "python_files": 11,
+      "report_files": 2,
+      "status": "VALIDATED_REJECTED",
+      "test_files": 2
+    },
+    {
+      "family": "strain_genome",
+      "path": "experiments/strain-lof-shrinkage-v1",
+      "python_files": 5,
+      "report_files": 1,
+      "status": "BLOCKED_IDENTIFIABILITY",
+      "test_files": 1
+    },
+    {
+      "family": "public_chemistry",
+      "path": "experiments/structure-generalization-v1",
+      "python_files": 6,
+      "report_files": 2,
+      "status": "VALIDATED_REJECTED",
+      "test_files": 1
+    },
+    {
+      "family": "control_calibration",
+      "path": "experiments/threshold-control-calibration-v1",
+      "python_files": 6,
+      "report_files": 2,
+      "status": "PARTIALLY_VALIDATED",
+      "test_files": 1
+    },
+    {
+      "family": "other",
+      "path": "experiments/training-camp-completion-v1",
+      "python_files": 6,
+      "report_files": 2,
+      "status": "VALIDATED_AUDIT",
+      "test_files": 1
+    },
+    {
+      "family": "other",
+      "path": "experiments/training-camp-followups-20260809",
+      "python_files": 0,
+      "report_files": 0,
+      "status": "VALIDATED_AUDIT",
+      "test_files": 0
+    }
+  ],
+  "schema_version": "1.0",
+  "test_files": 121
+}

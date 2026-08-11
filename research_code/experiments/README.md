@@ -1,0 +1,54 @@
+# Experiments
+
+Except for the required package `__init__.py`, every Python file in this folder
+represents one executable study. Shared orchestration lives in
+`../experiment_core/`; no experiment implements its own metric functions.
+
+There are three types:
+
+1. **Live fixture experiments**: `synthetic_mean_baseline.py` and
+   `synthetic_metadata_ridge.py` exercise the full model → central evaluation →
+   aggregate report path, including a learnable non-collapsed response.
+2. **Public-only live experiment**: `public_rna_lincs_mini.py` runs the frozen
+   six-signature RNA/causal-axis smoke.
+3. **Historical evidence Adapter**: files ending in a study name replay the
+   frozen aggregate source hash and expected result. They do not pretend to
+   retrain when historical per-sample predictions were intentionally not saved.
+
+`loss_ablation.py` is one such aggregate-only Adapter. It verifies the release-safe
+MSE/Huber/response-weighted-loss summary under `../evidence/loss-ablation-v1/`;
+the clean package does not claim to retrain that private 384-coordinate pilot.
+`structure_generalization.py` applies the same boundary to the independently
+validated Tanimoto, CPA-style additive and structure-context bilinear pilot under
+`../evidence/structure-generalization-v1/`. It verifies only release-safe
+all-ITT/coverage aggregates and never loads chemical identities or private
+predictions.
+`chemcpa_nonlinear.py` replays one combined release-safe record for the nonlinear
+composition v1/v2 pilots under `../evidence/chemcpa-nonlinear-v1-v2/`. V1 is a
+measured-control conditional diagnostic; v2 is a no-control development
+follow-up. The molecular branch is rejected, C0 remains research-only, and the
+Adapter does not claim an exact CPA/chemCPA reproduction or private retraining.
+`pubchem_structure_confirmatory.py` replays the later PubChem-first confirmation
+under `../evidence/pubchem-structure-confirmatory-v1/`. It verifies only
+anonymous all-37 means, coverage/count contracts and the frozen rejection of all
+three structure candidates; it does not expose the private training runner.
+
+List all registered experiments:
+
+```bash
+python3 research_cli.py list
+```
+
+Replay one study:
+
+```bash
+python3 research_cli.py run fair_architecture_evidence \
+  --scope aggregate-only \
+  --data-root .. \
+  --output reports/fair-architecture-replay
+```
+
+`chemical-router-v3` and `unified-router-final-v3-scoped` have no executable
+source in the persistent or workspace trees. They remain
+`BLOCKED_SOURCE_MISSING` in the evidence registry and are not exposed as
+executable experiments.

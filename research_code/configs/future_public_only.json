@@ -1,0 +1,22 @@
+{
+  "schema_version": "1.0",
+  "allowed_data_scopes": ["public", "synthetic"],
+  "network_provider_default": "disabled",
+  "offline_provider_default": "fixture",
+  "ollama_endpoint_allowlist": ["http://127.0.0.1:11434/api/generate"],
+  "forbidden_payloads": [
+    "competition identity",
+    "local path",
+    "free-form prompt",
+    "protein vector",
+    "response matrix",
+    "embedding",
+    "prediction"
+  ],
+  "causal_output": {
+    "minimum_edges": 3,
+    "maximum_edges": 8,
+    "mechanism_axes": 23,
+    "direct_protein_vector": false
+  }
+}

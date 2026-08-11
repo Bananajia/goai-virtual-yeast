@@ -1,0 +1,65 @@
+{
+  "schema_version": "1.1",
+  "endpoint_scope": "truth_prediction_common_cells",
+  "response_scope": "truth_prediction_direct_control_common_cells",
+  "residual_reference": "fit_frozen",
+  "group_protein_minimum_finite": 2,
+  "absolute_fidelity_axes": ["macro_by_condition", "macro_by_protein"],
+  "pcc_aggregation": "report_both_axes",
+  "rmse_aggregation": "micro_by_cell",
+  "vehicle_policy": "official_vehicle_map_required_for_primary_raw_fc",
+  "control_match_roles": [
+    "source",
+    "strain",
+    "medium",
+    "temperature",
+    "time",
+    "instrument",
+    "plate"
+  ],
+  "control_match_columns": [
+    "data_source",
+    "strain",
+    "medium",
+    "temperature",
+    "time",
+    "instrument",
+    "plate"
+  ],
+  "constant_prediction_pcc": 0.0,
+  "constant_truth_pcc": null,
+  "dep_policy": {
+    "threshold_abs_log2_fc": 1.0,
+    "threshold_operator": ">",
+    "minimum_k": 10,
+    "maximum_panel_fraction": 0.25,
+    "fit_scope": "outer_fit_only"
+  },
+  "official_scorecard": {
+    "split_kinds": [
+      "test_chem_only",
+      "test_strain_only",
+      "test_both",
+      "test_time"
+    ],
+    "module_weights_percent": {
+      "absolute_fidelity": 20,
+      "matched_control_raw_fc": 25,
+      "context_mean_residual": 20,
+      "drug_mean_residual": 20,
+      "double_unknown_or_time": 10,
+      "high_response_dep": 5
+    },
+    "synthesize_official_total": false,
+    "compliance_gate": "separate",
+    "open_source_contribution": {
+      "weight_percent": 5,
+      "separate_dimension": true
+    }
+  },
+  "historical_sensitivity": {
+    "residual_reference": "evaluation_centered",
+    "dep_threshold_quantile": 0.9,
+    "label": "not_official_primary"
+  }
+}

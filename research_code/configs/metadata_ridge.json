@@ -1,0 +1,26 @@
+{
+  "schema_version": "1.0",
+  "model": "masked_multi_output_ridge",
+  "alpha": 1.0,
+  "categorical": [
+    "Strains",
+    "perturbation_no_concentration",
+    "Medium",
+    "pert_time_unit"
+  ],
+  "numeric": {
+    "Temperature": "standardize",
+    "pert_time": "log1p"
+  },
+  "technical_covariates": ["data_source", "instrument"],
+  "forbidden_default_covariates": ["plate"],
+  "missingness_policy": {
+    "fit_only": true,
+    "max_missing_fraction": 0.8,
+    "remove_when": ">=0.8",
+    "boundary": "official_interpretation_material",
+    "unobserved_fallback_policy": "fit_global_median"
+  },
+  "source_matrix_width": 5243,
+  "submission_columns": "latest_official_feature_contract"
+}

@@ -1,0 +1,14 @@
+.venv/
+__pycache__/
+.pytest_cache/
+*.pyc
+.DS_Store
+
+# Never place competition data under the research code tree.
+private-data/
+raw-data/
+*.zip
+*.npz
+prediction.csv
+artifact/
+artifacts/

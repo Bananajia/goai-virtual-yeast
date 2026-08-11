@@ -1,0 +1,20 @@
+{
+  "citation": "https://doi.org/10.1093/bioinformatics/bty060",
+  "fixture": "l1000fwd_six.json",
+  "fixture_bytes": 4820,
+  "license_note": "L1000FWD web tools are free for academic/non-profit use; this fixture is a small, attributed API subset and is not assigned a new data license.",
+  "retrieved_utc": "2026-08-10",
+  "sha256": "3fc762d05132ac92b42e94f3e43f11cd0379738de685e2629b892258bfdbbed6",
+  "source_api_documentation": "https://maayanlab.cloud/l1000fwd/api_page",
+  "source_metadata": "https://maayanlab.cloud/l1000fwd/download/CD_signature_metadata.csv",
+  "source_scope": "public",
+  "source_urls": [
+    "https://maayanlab.cloud/l1000fwd/sig/CPC006_HA1E_6H:BRD-A23770159-001-02-3:11.1",
+    "https://maayanlab.cloud/l1000fwd/sig/CPC002_HA1E_6H:BRD-K60230970-001-04-3:10",
+    "https://maayanlab.cloud/l1000fwd/sig/CPC005_HA1E_24H:BRD-K69023402-001-02-5:10",
+    "https://maayanlab.cloud/l1000fwd/sig/CPC011_HA1E_6H:BRD-K05350981-001-01-0:10",
+    "https://maayanlab.cloud/l1000fwd/sig/CPC005_HA1E_6H:BRD-A18419789-001-01-4:10",
+    "https://maayanlab.cloud/l1000fwd/sig/CPC004_HA1E_6H:BRD-K12539581-001-14-6:10"
+  ],
+  "truth_policy": "Only the first 20 ranked up and 20 ranked down genes from each API response are frozen. These lists are withheld from provider input and used solely by the evaluator."
+}
