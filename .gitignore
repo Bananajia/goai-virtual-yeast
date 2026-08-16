@@ -30,6 +30,20 @@ data/raw/
 # Submission documents stay outside the public code repository.
 GOAI 虚拟酵母赛道 小米蕉队.pdf
 
+# Paper source and LaTeX build artifacts stay local.
+latex/
+latex_jia/
+latex copy/
+*.tex
+*.bib
+*.sty
+*.cls
+*.aux
+*.bbl
+*.blg
+*.toc
+*.synctex.gz
+
 tmp/
 build/
 dist/
