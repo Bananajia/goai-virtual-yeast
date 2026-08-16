@@ -27,6 +27,9 @@ data/raw/
 *.pt
 *.pth
 
+# Submission documents stay outside the public code repository.
+GOAI 虚拟酵母赛道 小米蕉队.pdf
+
 tmp/
 build/
 dist/
