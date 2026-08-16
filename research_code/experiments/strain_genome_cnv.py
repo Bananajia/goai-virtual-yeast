@@ -1,10 +1,13 @@
 """Experiment: replay strain LoF/frameshift/CNV evidence and identifiability stop."""
 
-from experiment_core.legacy_evidence import LegacyEvidenceReplay
+from experiment_core.legacy_evidence import AggregateEvidenceExperiment
 
 
-def build_experiment() -> LegacyEvidenceReplay:
-    return LegacyEvidenceReplay(
-        experiment_ids=("strain-genome-cnv-v1", "strain-lof-shrinkage-v1"),
-        run_name="strain_genome_cnv_evidence",
-    )
+class StrainGenomeCNVExperiment(AggregateEvidenceExperiment):
+    name = "strain_genome_cnv_evidence"
+    description = "Replay strain LoF, frameshift and CNV aggregate evidence."
+    evidence_ids = ("strain-genome-cnv-v1", "strain-lof-shrinkage-v1")
+
+
+def build_experiment() -> StrainGenomeCNVExperiment:
+    return StrainGenomeCNVExperiment()

@@ -1,10 +1,13 @@
 """Experiment: replay public drug-target to STRING local-network evidence."""
 
-from experiment_core.legacy_evidence import LegacyEvidenceReplay
+from experiment_core.legacy_evidence import AggregateEvidenceExperiment
 
 
-def build_experiment() -> LegacyEvidenceReplay:
-    return LegacyEvidenceReplay(
-        experiment_ids=("drug-target-localnet-v1",),
-        run_name="drug_target_localnet_evidence",
-    )
+class DrugTargetLocalnetExperiment(AggregateEvidenceExperiment):
+    name = "drug_target_localnet_evidence"
+    description = "Replay public target-to-local-network aggregates."
+    evidence_ids = ("drug-target-localnet-v1",)
+
+
+def build_experiment() -> DrugTargetLocalnetExperiment:
+    return DrugTargetLocalnetExperiment()

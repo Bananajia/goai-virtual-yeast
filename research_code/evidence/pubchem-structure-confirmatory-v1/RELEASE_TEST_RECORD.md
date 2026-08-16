@@ -24,7 +24,7 @@ then passed after the receipt was added.
 - Source-hash and 20-scalar aggregate replay: **PASS**.
 - Release-boundary scan for machine-local paths, identity fields, molecular
   strings, fold identifiers and fitted weights: **PASS**.
-- Full clean research-code suite: **106/106 PASS**.
+- Full current research-code suite: **110/110 PASS; 0 skipped**.
 
 These checks validate the release-safe aggregate Adapter. They do not retrain
 the private confirmatory study or reconstruct its entity mappings, fold rows,

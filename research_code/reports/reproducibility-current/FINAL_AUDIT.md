@@ -23,16 +23,25 @@ Verdict: **PASS WITH DECLARED EXTERNAL DEPENDENCIES**
   disclosed separately.
 - Aggregate reporting validates scalar metrics, non-negative counts, boolean
   contracts, portable provenance and safe notes before atomic output.
-- Current source tree: 106/106 unified tests passed.
-- 81 Python files compiled.
+- Current source tree: 110/110 unified tests passed; 0 skipped.
+- 84 Python files compiled.
 - `uv lock --check` resolved 27 packages.
-- 21 experiments are discoverable through the common CLI.
-- 23/23 golden evidence records and 95/95 frozen metrics replayed; zero
+- 23 experiments are discoverable through the common CLI.
+- The registry contains 28 records: 25 golden, one invalidated and two
+  source-missing lineages.
+- 25/25 golden evidence records and 177/177 frozen metrics replayed; zero
   invalidated records were accepted as golden.
-- The four release-safe aggregate Adapters (loss, structure, nonlinear
-  composition and PubChem/RDKit confirmation) replayed 4/4 records and 65/65
-  frozen scalars. The PubChem Adapter ships no molecular identities, structures,
-  fingerprints, predictions or weights.
+- The six release-safe aggregate Adapters (loss, structure, nonlinear
+  composition, PubChem/RDKit confirmation, public causal residual and public
+  similarity prototype) replayed 6/6 records and 147/147 frozen scalars. The
+  two new public-knowledge sources are byte-identical to their audited
+  aggregate results and ship no joins/mappings, per-condition/per-protein
+  rows, feature/response vectors, neighbours, predictions or weights.
+- The resource manifest discloses AID 1159580, the PubChem/Peter similarity
+  assets and the interactive Codex closed commercial authoring seam. No
+  competition data was supplied to that seam and it is not called during
+  training/inference; the frozen output is hash-bound, while the unavailable
+  exact service snapshot is correctly marked non-reproducible.
 - Fixed-seed synthetic mean/Ridge results match the saved artifacts.
 - The offline public RNA result is deterministic.
 - The local Qwen six-case pilot correctly returned `BLOCKED` after invalid

@@ -10,8 +10,8 @@
 
 本轮复现分成三种证据，不能混为一谈：
 
-1. **统一代码的可执行复现：** 当前源代码树 106 项单元/合同测试全部通过，81 个发布层 Python 文件编译通过。最终干净发布仓库应在组装完成后单独记录，不能沿用旧 checkout 的测试数。
-2. **历史结论的证据回放：** 23 份 golden 聚合证据的 SHA-256 与 95 个冻结指标全部复现，未读取私有矩阵或逐样本预测；其中四个 release-safe 聚合 Adapter 为 4/4 records、65/65 scalars。
+1. **统一代码的可执行复现：** 当前源代码树 110 项单元/合同测试全部通过，84 个发布层 Python 文件编译通过。最终干净发布仓库应在组装完成后单独记录，不能沿用旧 checkout 的测试数。
+2. **历史结论的证据回放：** registry 共 28 项，其中 25 份 golden 聚合证据的 SHA-256 与 177 个冻结指标全部复现，未读取私有矩阵或逐样本预测；六个 release-safe 聚合 Adapter 为 6/6 records、147/147 scalars。
 3. **端到端合成验证：** 固定 seed 7 的平均值模型正确呈现条件方差塌缩；固定 seed 11 的 Metadata Ridge 在已知合成机制上恢复 Raw-FC PCC 0.999994、条件方差比 0.999841、Endpoint RMSE 0.003759。
 
 这证明新 Interface、统一评测和证据链可以复现。它不等于重新训练了全部历史模型，也不等于已在私有比赛矩阵上正式重跑 LIVE Metadata Ridge；历史运行没有保存逐样本预测，且两个最终路由名称缺少可执行源码，因此这些边界不能伪装成源码级复现。
@@ -49,7 +49,7 @@
 
 ## 历史正式结果回放
 
-证据回放结果：23/23 个 golden records 通过，95/95 个冻结指标一致，0 个已作废结果被当作 golden。四个 release-safe 聚合 Adapter（loss、structure、nonlinear composition、PubChem/RDKit confirmatory）独立核验 4/4 records、65/65 scalars。
+证据回放结果：25/25 个 golden records 通过，177/177 个冻结指标一致，0 个已作废结果被当作 golden。六个 release-safe 聚合 Adapter（loss、structure、nonlinear composition、PubChem/RDKit confirmatory、public causal residual、public similarity prototype）独立核验 6/6 records、147/147 scalars。
 
 本轮新增了正式 baseline 套件的冻结回放：
 
@@ -69,6 +69,12 @@
 ### PubChem/RDKit 结构确认
 
 正式聚合 Adapter 已纳入 37 个药物的确认性实验：25 个通过严格结构解析，12 个走逐项完全缺失回退；三种结构候选均未通过晋级门。Adapter 核验 20 个冻结标量，但不分发实体 crosswalk、SMILES、InChIKey、fingerprint、逐样本预测或权重。这个结果说明结构覆盖从旧版本改善，但没有证明结构特征带来稳定的药物特异增益，因此没有把候选强行晋级。
+
+### 公共因果链与相似度原型
+
+两个已完成的公共知识实验也已接入独立 release-safe Adapter。因果残差实验核验 39 个匿名聚合标量，相似度原型核验 43 个；两者分别与已审计 `RESULTS.md` 逐字节一致。它们只保存总体覆盖、fold-macro 指标、方向计数和结论，不分发实体 join/mapping、逐条件或逐蛋白行、分子/基因组/机制轴向量、邻居、预测或权重。二者都维持 `VALIDATED_REJECTED`，不能因为可复现而改写为候选晋级。
+
+因果链的交互式 Codex 闭源商业创作 seam 已在 `external_resources/manifest.json` 披露：未提供比赛数据，训练/推理/评分/回放时无模型调用，冻结输入输出有 SHA-256；但精确服务快照和稳定 transcript 不可得，因此生成本身不声称 bit-reproducible。相似度实验的 PubChem 与 Peter-2018 公共资产及哈希边界也在同一 manifest 中登记。
 
 ### LIVE Metadata Ridge 边界
 
@@ -122,7 +128,16 @@ uv run --locked python research_cli.py run \
   --output reports/reproducibility-current/legacy-evidence
 uv run --locked python research_cli.py run \
   pubchem_structure_confirmatory_evidence --scope aggregate-only \
+  --data-root .. \
   --output reports/reproducibility-current/pubchem-structure-confirmatory-replay
+uv run --locked python research_cli.py run \
+  public_causal_residual_evidence --scope aggregate-only \
+  --data-root .. \
+  --output reports/reproducibility-current/public-causal-residual-replay
+uv run --locked python research_cli.py run \
+  public_similarity_prototype_evidence --scope aggregate-only \
+  --data-root .. \
+  --output reports/reproducibility-current/public-similarity-prototype-replay
 uv run --locked python research_cli.py run \
   synthetic_mean_baseline --scope synthetic \
   --seed 7 \

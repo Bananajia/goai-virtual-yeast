@@ -1,18 +1,27 @@
 # Test record
 
-Date: 2026-08-11
+Date: 2026-08-16
 
 ## Unified research layer
 
 ```text
 uv run --locked python -m unittest discover -s tests -q
-Ran 106 tests
+Ran 118 tests
+OK (skipped=3)
+```
+
+The release checkout passes 115 tests. Three tests that require the optional
+historical experiment tree are skipped because that tree is intentionally not
+published in this repository.
+
+```text
+uv run --locked python -m unittest mijiao_predict_v0.test_mijiao_predict -q
+Ran 7 tests
 OK
 ```
 
-All 106 unified unit/contract tests pass in the current source tree. This
-snapshot does not reuse the older clean-checkout count: release-checkout tests
-must be reported separately after that exact tree has been assembled.
+The separate MiJiaoPredict suite verifies scoped expert selection, exact Ridge
+fallback, missing feature handling, invalid expert output and route auditing.
 
 The suite covers preprocessing, fit-only state, unknown metadata levels, grouped
 OOD zero overlap, strict measured-control pairing, common masks, residual
@@ -22,7 +31,7 @@ tampering and code inventory.
 
 ```text
 find . -type f -name '*.py' ... | python3 -m py_compile
-81 Python files
+93 Python files
 PASS
 ```
 
@@ -31,6 +40,8 @@ uv lock --check
 Resolved 27 packages
 PASS
 ```
+
+The common CLI exposes **29** experiment entries.
 
 ## Historical contract suites
 
@@ -56,10 +67,13 @@ truth and produced 128 passing synthetic/contract checks in total:
 ## Aggregate evidence replay
 
 ```text
-records requested: 23
-records passed: 23
+registry records: 34
+golden records: 30
+release-safe records: 11
+records requested: 30
+records passed: 30
 records failed: 0
-frozen metrics verified: 95
+frozen metrics verified: 253
 invalidated used as golden: 0
 PASS
 ```
@@ -68,9 +82,8 @@ Source SHA-256 is checked before metric extraction. The replay reads only
 aggregate Markdown/JSON, never competition matrices, identities, vectors,
 weights or predictions.
 
-The four release-safe current-study aggregate Adapters (loss, structure,
-nonlinear composition and PubChem/RDKit structure confirmation) replay 4/4
-records and 65/65 frozen scalars. The larger 23/95 replay requires the optional
+The eleven release-safe current-study aggregate Adapters replay 11/11 records
+and 223/223 frozen scalars. The larger 30/253 replay requires the optional
 historical aggregate tree and is therefore reported as a full-archive audit,
 not as a clean-checkout retraining claim.
 
@@ -78,6 +91,21 @@ The PubChem confirmation Adapter verifies aggregate results only: 25/37 strict
 structures, 12 exact missing-structure fallbacks and rejection of all three
 tested structure candidates. It ships no SMILES, identity crosswalk,
 fingerprints, predictions, weights or private matrices.
+
+The two public-knowledge Adapters independently replay 39 and 43 frozen
+scalars. Their shipped sources are byte-identical to the audited aggregate
+results and contain no entity joins/mappings, per-condition or per-protein
+rows, public feature/response vectors, neighbours, predictions or weights.
+The external-resource manifest separately discloses the public AID 1159580
+CGM, PubChem/Peter similarity assets and the non-bit-reproducible interactive
+Codex authoring seam.
+
+The causal and similarity `RESULTS.md` sources are byte-identical to the
+independently audited originals, with SHA-256
+`db9725213406606144ddfabb228ad77138ca6e67910b174dd1914cc4f5751f17`
+and `d5f5fb39ddf69db910e19b03a62d8200039798d7772358fec9f669d17b7b06e0`.
+A directed release scan found no machine-local path, identity/structure field,
+or artifact larger than 50 KiB in either Adapter payload or replay receipt.
 
 ## Official-facing scorecard contract
 

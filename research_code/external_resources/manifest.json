@@ -13,10 +13,54 @@
     {
       "id": "pubchem_compound_structure",
       "source": "PubChem",
-      "locator": "https://pubchem.ncbi.nlm.nih.gov/",
-      "status": "coverage_frozen_25_of_37_and_train_only_confirmatory_no_promotion_not_live_baseline",
+      "locator": "https://pubchem.ncbi.nlm.nih.gov/ ; aggregate evidence: research_code/evidence/pubchem-structure-confirmatory-v1/RESULTS.md and research_code/evidence/public-similarity-prototype-v1/RESULTS.md",
+      "status": "coverage_frozen_25_of_37_and_used_by_rejected_train_only_structure_and_similarity_pilots_not_live_baseline",
+      "used_by": [
+        "pubchem-structure-confirmatory-v1",
+        "public-causal-residual-v1",
+        "public-similarity-prototype-v1"
+      ],
       "version": "PubChem PUG REST audit 2026-08-11; RDKit 2025.09.2",
+      "source_sha256": {
+        "strict_pubchem_crosswalk": "65a586905b11dd102a83cb36af8efe7305901648987b2ed49e2132bdb55d42c0"
+      },
       "license_boundary": "original PubChem terms; no payload redistributed by this manifest"
+    },
+    {
+      "id": "pubchem_aid_1159580_public_cgm",
+      "source": "PubChem BioAssay AID 1159580 and Wildenhain et al. 2016 public yeast chemical-genetic matrix",
+      "locator": "https://pubchem.ncbi.nlm.nih.gov/bioassay/1159580 ; https://doi.org/10.1038/sdata.2016.95 ; aggregate evidence: research_code/evidence/public-causal-residual-v1/RESULTS.md",
+      "status": "public_only_frozen_source_for_rejected_public_causal_residual_pilot_not_live_baseline",
+      "used_by": [
+        "public-causal-residual-v1"
+      ],
+      "version": "public source and deterministic top-96 panel frozen 2026-08-11",
+      "source_sha256": {
+        "public_csv": "12c518897ca45a3b04f7829df2d6283c011a6c6b6a816a9c27f84749078b32c0",
+        "public_assay_summary": "7c0476ea94ca7660b0e315ca4d96dc4dbe4f1816d01c5934e5b1c7b10eb460a5",
+        "public_manifest": "4cfc16ed62610b7cbb9b8f5fcd82b8063168130893d4c8ad584d232ac0773f19"
+      },
+      "competition_data_used": false,
+      "data_boundary": "public assay and ontology summaries only; no competition membership, labels, residuals, predictions or per-entity competition results are redistributed",
+      "license_boundary": "Wildenhain et al. data descriptor is CC BY 4.0; PubChem source terms also apply; this release ships aggregate evidence only"
+    },
+    {
+      "id": "interactive_codex_public_causal_authoring",
+      "source": "interactive OpenAI Codex closed commercial service (GPT-5 family)",
+      "locator": "aggregate disclosure: research_code/evidence/public-causal-residual-v1/RESULTS.md",
+      "status": "frozen_public_artifact_authoring_only_not_called_during_training_inference_scoring_or_replay",
+      "used_by": [
+        "public-causal-residual-v1"
+      ],
+      "version": "authored 2026-08-11; exact service snapshot identifier was not exposed",
+      "competition_data_supplied": false,
+      "called_during_train_or_inference": false,
+      "snapshot_reproducible": false,
+      "frozen_input_sha256": "4cfc16ed62610b7cbb9b8f5fcd82b8063168130893d4c8ad584d232ac0773f19",
+      "frozen_output_sha256": "2e6b137c221abafde31584e03c3a29e4bbb4e26830bf4a346ec061b2dae81a61",
+      "reproducibility_boundary": "generation is not bit-reproducible because neither the exact service snapshot nor a stable transcript was available; only the frozen public input/output hashes and validators are reproducible",
+      "data_boundary": "only release-safe public PubChem and public chemical-genetic summaries entered authoring; no competition entity list, values, labels, residuals, predictions, validation or test data were supplied",
+      "license_boundary": "closed commercial service; no model weights, prompt transcript or service snapshot are redistributed"
     },
     {
       "id": "rdkit_descriptors",
@@ -29,8 +73,12 @@
     {
       "id": "yeast_1011_genomes",
       "source": "1011 yeast genomes project / Peter public strain resources",
-      "locator": "https://1002genomes.u-strasbg.fr/files/ ; aggregate evidence: research_code/evidence/registry.json#strain-genome-cnv-v1",
-      "status": "used_in_aggregate_private_pilot_not_live_baseline",
+      "locator": "https://1002genomes.u-strasbg.fr/files/ ; aggregate evidence: research_code/evidence/registry.json#strain-genome-cnv-v1 and research_code/evidence/public-similarity-prototype-v1/RESULTS.md",
+      "status": "used_in_rejected_train_only_genome_and_public_similarity_pilots_not_live_baseline",
+      "used_by": [
+        "strain-genome-cnv-v1",
+        "public-similarity-prototype-v1"
+      ],
       "version": "Peter et al. 2018, 1,011 isolates",
       "source_sha256": {
         "1011LossOfFunction.xls.gz": "067327e1970c48f278dd08abb18f140622458829a6abc320207245c8c4b61c34",

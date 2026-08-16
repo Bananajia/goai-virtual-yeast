@@ -39,15 +39,15 @@ uv sync --locked --extra dev
 Resolved 27 packages
 
 python -m unittest discover -s tests -v
-Ran 106 tests
-OK (skipped=3 optional historical-tree tests)
+Ran 110 tests
+OK (0 skipped in the current full project tree)
 
 python -m compileall ...
-81 published Python files
+84 published Python files
 PASS
 
 research_cli.py list
-21 aggregate/synthetic/public experiment entries
+23 aggregate/synthetic/public experiment entries
 ```
 
 Seven integration tests exercise the public CLI: train→artifact→prediction,
@@ -64,7 +64,8 @@ account for the updated test, Python-file and CLI counts above.
 
 - `OPEN_SOURCE_AND_DATA.md` states the Apache-2.0 scope, private exclusions,
   dependencies, commercial-API/closed-model status and 5% reusable contribution.
-- `external_resources/manifest.json` indexes ten official/public data and local
+- `external_resources/manifest.json` indexes twelve official/public data,
+  closed-service and local
   model resources, distinguishing LIVE use, aggregate-only pilots, public-only
   smoke tests and not-yet-frozen recommendations.
 - GitHub and ZIP publication remain a separate audited release step: the clean

@@ -243,7 +243,9 @@ class LegacyEvidenceReplay:
             },
             contract={
                 "aggregate_only": True,
-                "source_hashes_verified": receipt.records_failed == 0,
+                "source_hashes_verified": (
+                    receipt.records_failed == 0 and receipt.records_blocked == 0
+                ),
                 "invalidated_excluded_from_golden": (
                     receipt.invalidated_used_as_golden == 0
                 ),
@@ -379,3 +381,21 @@ class LegacyEvidenceReplay:
                     current = current[token]
             return float(current)
         raise ValueError(f"unsupported metric locator: {kind}")
+
+
+class AggregateEvidenceExperiment(LegacyEvidenceReplay):
+    """Reusable base for one explicitly named aggregate-only study Adapter.
+
+    Subclasses expose a stable public class and experiment name while sharing
+    the hash-first, aggregate-only replay implementation.  This is deliberately
+    an Adapter, not a claim that private model fitting is reproduced here.
+    """
+
+    name = "aggregate_evidence_experiment"
+    description = "Verify one frozen aggregate-only study."
+    evidence_ids: Tuple[str, ...] = ()
+
+    def __init__(self) -> None:
+        if not self.evidence_ids:
+            raise ValueError(f"{type(self).__name__} must declare evidence_ids")
+        super().__init__(experiment_ids=self.evidence_ids, run_name=self.name)

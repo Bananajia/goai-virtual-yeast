@@ -6,6 +6,9 @@ The repository remains private during the competition. Before making it public:
 - confirm every public fixture's redistribution terms;
 - verify no competition matrix, entity join map, sample-level prediction, vector,
   prompt/response, model weight, credential, local path, or cache is tracked;
+- verify the closed-commercial Codex authoring disclosure remains present, that
+  no exact prompt/transcript is claimed as reproducible, and that no online
+  model call is required for training, inference, scoring, or replay;
 - run `uv sync --extra dev` and
   `uv run --locked python -m unittest discover -s tests -v` in `research_code/`;
 - run credential, large-file, archive, and absolute-path scans;

@@ -3,5 +3,9 @@
 from experiment_core.legacy_evidence import LegacyEvidenceReplay
 
 
-def build_experiment() -> LegacyEvidenceReplay:
-    return LegacyEvidenceReplay()
+class AllLegacyEvidenceExperiment(LegacyEvidenceReplay):
+    """Replay every persistent golden aggregate record through one interface."""
+
+
+def build_experiment() -> AllLegacyEvidenceExperiment:
+    return AllLegacyEvidenceExperiment()

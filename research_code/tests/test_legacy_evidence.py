@@ -270,6 +270,53 @@ class LegacyEvidenceRegistryTest(unittest.TestCase):
         self.assertIn("no-control development follow-up", raw)
         self.assertIn("NO-PROMOTION", raw)
 
+    def test_public_knowledge_adapters_are_hash_locked_and_release_safe(self) -> None:
+        cases = (
+            (
+                "public-causal-residual-v1",
+                39,
+                "db9725213406606144ddfabb228ad77138ca6e67910b174dd1914cc4f5751f17",
+            ),
+            (
+                "public-similarity-prototype-v1",
+                43,
+                "d5f5fb39ddf69db910e19b03a62d8200039798d7772358fec9f669d17b7b06e0",
+            ),
+        )
+        registry = EvidenceRegistry.load(REGISTRY_PATH)
+
+        for experiment_id, expected_metrics, expected_hash in cases:
+            with self.subTest(experiment_id=experiment_id):
+                record = registry.get(experiment_id)
+                self.assertEqual(record.status, "VALIDATED_REJECTED")
+                self.assertEqual(record.persistence, "PERSISTENT_RELEASE_SAFE")
+                self.assertEqual(record.source_sha256, expected_hash)
+
+                receipt = LegacyEvidenceReplay(
+                    registry_path=REGISTRY_PATH,
+                    experiment_ids=(experiment_id,),
+                ).verify(documents_root=PROJECT_ROOT)
+                self.assertEqual(receipt.status, "PASS")
+                self.assertEqual(receipt.metrics_verified, expected_metrics)
+
+                evidence_dir = PROJECT_ROOT / Path(record.source.path).parent
+                raw = (evidence_dir / "RESULTS.md").read_text(encoding="utf-8")
+                for forbidden in (
+                    "/Users/",
+                    "/var/folders/",
+                    "private-data",
+                    "sample_ID",
+                    "condition_id",
+                    "protein_id",
+                    "drug_id",
+                    "strain_id",
+                    "fold_id",
+                    "SMILES",
+                    "InChIKey",
+                ):
+                    self.assertNotIn(forbidden, raw)
+                self.assertTrue((evidence_dir / "RELEASE_TEST_RECORD.md").is_file())
+
 
 if __name__ == "__main__":
     unittest.main()

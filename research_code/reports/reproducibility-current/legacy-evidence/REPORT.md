@@ -7,7 +7,7 @@ Status: `GOVERNANCE`
 | Metric | Value |
 |---|---:|
 | `evidence_replay_pass_rate` | 1.000000 |
-| `metrics_verified` | 95.000000 |
+| `metrics_verified` | 177.000000 |
 
 ## Provenance
 
