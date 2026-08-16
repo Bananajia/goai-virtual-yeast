@@ -14,6 +14,7 @@ This directory is the clean execution layer for the GOAI virtual-yeast project. 
 | `evaluation/` | canonical metrics plus the official-facing split/scorecard contract (no invented total) |
 | `reporting/` | aggregate-only result writers |
 | `evidence/` | validity and golden-result registry for historical runs |
+| `mijiao_predict_v0/` | evidence-gated MiJiaoPredict orchestration, expert contracts, route audit and exact core fallback |
 | `tests/` | public-interface and leakage-regression tests |
 
 ## Quick start
@@ -22,12 +23,17 @@ This directory is the clean execution layer for the GOAI virtual-yeast project. 
 cd research_code
 uv sync --locked --extra dev
 uv run --locked python -m unittest discover -s tests -v
+uv run --locked python -m unittest mijiao_predict_v0.test_mijiao_predict -v
 uv run --locked python research_cli.py list
 uv run --locked python research_cli.py run synthetic_mean_baseline --scope synthetic --output reports/synthetic_mean_baseline
 uv run --locked python research_cli.py run loss_ablation_evidence --scope aggregate-only --data-root .. --output reports/loss-ablation-replay
 uv run --locked python research_cli.py run structure_generalization_evidence --scope aggregate-only --data-root .. --output reports/structure-generalization-replay
 uv run --locked python research_cli.py run chemcpa_nonlinear_evidence --scope aggregate-only --data-root .. --output reports/chemcpa-nonlinear-replay
 uv run --locked python research_cli.py run pubchem_structure_confirmatory_evidence --scope aggregate-only --data-root .. --output reports/pubchem-structure-confirmatory-replay
+uv run --locked python research_cli.py run public_causal_residual_evidence --scope aggregate-only --data-root .. --output reports/public-causal-residual-replay
+uv run --locked python research_cli.py run public_similarity_prototype_evidence --scope aggregate-only --data-root .. --output reports/public-similarity-prototype-replay
+uv run --locked python research_cli.py run chx_centered_transfer_evidence --scope aggregate-only --data-root .. --output reports/chx-centered-transfer-replay
+uv run --locked python research_cli.py run blind_llm_causal_pilot_evidence --scope aggregate-only --data-root .. --output reports/blind-llm-causal-pilot-replay
 ```
 
 ## LIVE competition metadata Ridge
@@ -62,17 +68,39 @@ ordered protein subset, validates finite log2 output through
 artifacts contain fitted vocabularies and official feature names; keep them out
 of the public repository.
 
+## MiJiaoPredict v0
+
+`mijiao_predict_v0.MiJiaoPredict` is the public orchestration interface for the
+overall predictor. A complete Metadata Ridge prediction is supplied as the
+core. A scoped residual or replacement expert can modify a row only when its
+source is executable, its frozen status is `promoted_scoped`, the query matches
+that scope, and the required feature view is present. Missing inputs, rejected
+experts, invalid outputs and execution errors preserve the finite core exactly
+and are recorded in a route audit. The repository does not relabel rejected
+structure, knowledge or language-model pilots as enabled experts.
+
 The standalone submission package runs the executable core and public-only tests;
 tests that replay the optional historical experiment tree are skipped when that
-tree is not present. The loss-ablation, structure-generalization and
-nonlinear-composition Adapters, plus the later PubChem-first confirmation, are
-release-safe exceptions: their compact, identity-free aggregate evidence ships
-under `evidence/loss-ablation-v1/` and
-`evidence/structure-generalization-v1/`, and
-`evidence/chemcpa-nonlinear-v1-v2/`, and
-`evidence/pubchem-structure-confirmatory-v1/`. Each Adapter verifies the source hash
-and frozen scalars. This makes the negative model-selection decisions auditable;
-it does not retrain the private pilots.
+tree is not present. Eleven release-safe aggregate Adapters ship compact,
+identity-free evidence under `evidence/loss-ablation-v1/`,
+`evidence/structure-generalization-v1/`,
+`evidence/chemcpa-nonlinear-v1-v2/`,
+`evidence/pubchem-structure-confirmatory-v1/`,
+`evidence/public-causal-residual-v1/`, and
+`evidence/public-similarity-prototype-v1/`,
+`evidence/chemcpa-centered-direct-v1/`,
+`evidence/fixed-template-shared-center-v2/`,
+`evidence/txgemma-top5-prompt-v1/`,
+`evidence/downstream-state-posthoc-v1/`, and
+`evidence/blind-llm-causal-pilot-v1/`. Each Adapter verifies the source
+hash before its frozen scalars. This makes the negative model-selection
+decisions auditable; it does not retrain the private pilots or distribute
+entity joins, per-condition/per-protein artifacts, vectors or fitted weights.
+
+Every aggregate study has an explicit named experiment class in its own file,
+all reusing `AggregateEvidenceExperiment`; legacy `build_experiment()` callers
+remain supported. The still-running TxGemma generic-axis/off-axis protocol is a
+non-golden `PENDING` registry entry and cannot emit a successful replay.
 
 ## Non-negotiable contracts
 

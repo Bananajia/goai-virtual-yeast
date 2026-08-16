@@ -8,12 +8,12 @@
   "counts": {
     "records_blocked": 0,
     "records_failed": 0,
-    "records_passed": 23,
-    "records_requested": 23
+    "records_passed": 25,
+    "records_requested": 25
   },
   "metrics": {
     "evidence_replay_pass_rate": 1.0,
-    "metrics_verified": 95.0
+    "metrics_verified": 177.0
   },
   "name": "legacy_evidence_replay",
   "notes": [

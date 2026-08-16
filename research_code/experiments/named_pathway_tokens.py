@@ -1,10 +1,13 @@
 """Experiment: replay named GO-slim output-side token evidence."""
 
-from experiment_core.legacy_evidence import LegacyEvidenceReplay
+from experiment_core.legacy_evidence import AggregateEvidenceExperiment
 
 
-def build_experiment() -> LegacyEvidenceReplay:
-    return LegacyEvidenceReplay(
-        experiment_ids=("named-pathway-tokens-v1",),
-        run_name="named_pathway_tokens_evidence",
-    )
+class NamedPathwayTokensExperiment(AggregateEvidenceExperiment):
+    name = "named_pathway_tokens_evidence"
+    description = "Replay named GO-slim output-side token aggregates."
+    evidence_ids = ("named-pathway-tokens-v1",)
+
+
+def build_experiment() -> NamedPathwayTokensExperiment:
+    return NamedPathwayTokensExperiment()

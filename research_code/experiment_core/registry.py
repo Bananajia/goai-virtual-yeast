@@ -3,31 +3,6 @@ from __future__ import annotations
 from typing import Dict, Iterable
 
 from .base import Experiment, ExperimentResult, RunContext
-from experiments.synthetic_mean_baseline import SyntheticMeanBaseline
-from experiments.synthetic_metadata_ridge import SyntheticMetadataRidge
-from experiments.legacy_evidence_replay import build_experiment as build_legacy_replay
-from experiments.public_rna_lincs_mini import PublicRnaLincsMiniExperiment
-from experiments.conditional_uncertainty import build_experiment as build_uncertainty
-from experiments.chemcpa_nonlinear import build_experiment as build_chemcpa_nonlinear
-from experiments.control_affine_pairwise import build_experiment as build_control_affine
-from experiments.drug_target_localnet import build_experiment as build_drug_localnet
-from experiments.external_knowledge_transformer import build_experiment as build_transformer
-from experiments.fair_architecture import build_experiment as build_fair_architecture
-from experiments.functional_multihead import build_experiment as build_multihead
-from experiments.latent_dynamics import build_experiment as build_latent_dynamics
-from experiments.local_llm_mechanism import build_experiment as build_local_llm
-from experiments.loss_ablation import build_experiment as build_loss_ablation
-from experiments.multiobjective_highresponse import build_experiment as build_multiobjective
-from experiments.named_pathway_tokens import build_experiment as build_named_pathways
-from experiments.pubchem_structure_confirmatory import (
-    build_experiment as build_pubchem_structure_confirmatory,
-)
-from experiments.static_prefix import build_experiment as build_static_prefix
-from experiments.strain_genome_cnv import build_experiment as build_strain_genome
-from experiments.structure_generalization import (
-    build_experiment as build_structure_generalization,
-)
-from experiments.threshold_policy import build_experiment as build_threshold_policy
 
 
 class ExperimentRegistry:
@@ -42,29 +17,79 @@ class ExperimentRegistry:
 
     @classmethod
     def default(cls) -> "ExperimentRegistry":
+        # Import lazily so every experiment class remains independently
+        # importable and reusable without a registry-bootstrap cycle.
+        from experiments.blind_llm_causal_pilot import BlindLLMCausalPilotExperiment
+        from experiments.chemcpa_centered_direct import ChemCPACenteredDirectExperiment
+        from experiments.chemcpa_nonlinear import ChemCPANonlinearExperiment
+        from experiments.chx_centered_transfer import CHXCenteredTransferExperiment
+        from experiments.chx_downstream_state import CHXDownstreamStateExperiment
+        from experiments.conditional_uncertainty import ConditionalUncertaintyExperiment
+        from experiments.control_affine_pairwise import ControlAffinePairwiseExperiment
+        from experiments.drug_target_localnet import DrugTargetLocalnetExperiment
+        from experiments.external_knowledge_transformer import (
+            ExternalKnowledgeTransformerExperiment,
+        )
+        from experiments.fair_architecture import FairArchitectureExperiment
+        from experiments.functional_multihead import FunctionalMultiheadExperiment
+        from experiments.latent_dynamics import LatentDynamicsExperiment
+        from experiments.legacy_evidence_replay import AllLegacyEvidenceExperiment
+        from experiments.local_llm_mechanism import LocalLLMMechanismExperiment
+        from experiments.loss_ablation import LossAblationExperiment
+        from experiments.multiobjective_highresponse import (
+            MultiobjectiveHighResponseExperiment,
+        )
+        from experiments.named_pathway_tokens import NamedPathwayTokensExperiment
+        from experiments.pubchem_structure_confirmatory import (
+            PubChemStructureConfirmatoryExperiment,
+        )
+        from experiments.public_causal_residual import PublicCausalResidualExperiment
+        from experiments.public_rna_lincs_mini import PublicRnaLincsMiniExperiment
+        from experiments.public_similarity_prototype import (
+            PublicSimilarityPrototypeExperiment,
+        )
+        from experiments.static_prefix import StaticPrefixExperiment
+        from experiments.strain_genome_cnv import StrainGenomeCNVExperiment
+        from experiments.structure_generalization import StructureGeneralizationExperiment
+        from experiments.synthetic_mean_baseline import SyntheticMeanBaseline
+        from experiments.synthetic_metadata_ridge import SyntheticMetadataRidge
+        from experiments.threshold_policy import ThresholdPolicyExperiment
+        from experiments.txgemma_top5_prompt import TxGemmaTop5PromptExperiment
+        from experiments.txgemma_generic_off_axis import (
+            TxGemmaGenericOffAxisExperiment,
+        )
+
         return cls(
             (
                 SyntheticMeanBaseline(),
                 SyntheticMetadataRidge(),
                 PublicRnaLincsMiniExperiment(),
-                build_legacy_replay(),
-                build_fair_architecture(),
-                build_control_affine(),
-                build_transformer(),
-                build_multihead(),
-                build_latent_dynamics(),
-                build_multiobjective(),
-                build_loss_ablation(),
-                build_uncertainty(),
-                build_local_llm(),
-                build_named_pathways(),
-                build_drug_localnet(),
-                build_strain_genome(),
-                build_structure_generalization(),
-                build_chemcpa_nonlinear(),
-                build_pubchem_structure_confirmatory(),
-                build_static_prefix(),
-                build_threshold_policy(),
+                AllLegacyEvidenceExperiment(),
+                FairArchitectureExperiment(),
+                ControlAffinePairwiseExperiment(),
+                ExternalKnowledgeTransformerExperiment(),
+                FunctionalMultiheadExperiment(),
+                LatentDynamicsExperiment(),
+                MultiobjectiveHighResponseExperiment(),
+                LossAblationExperiment(),
+                ConditionalUncertaintyExperiment(),
+                LocalLLMMechanismExperiment(),
+                NamedPathwayTokensExperiment(),
+                DrugTargetLocalnetExperiment(),
+                StrainGenomeCNVExperiment(),
+                StructureGeneralizationExperiment(),
+                ChemCPANonlinearExperiment(),
+                ChemCPACenteredDirectExperiment(),
+                CHXCenteredTransferExperiment(),
+                TxGemmaTop5PromptExperiment(),
+                CHXDownstreamStateExperiment(),
+                BlindLLMCausalPilotExperiment(),
+                TxGemmaGenericOffAxisExperiment(),
+                PubChemStructureConfirmatoryExperiment(),
+                PublicCausalResidualExperiment(),
+                PublicSimilarityPrototypeExperiment(),
+                StaticPrefixExperiment(),
+                ThresholdPolicyExperiment(),
             )
         )
 

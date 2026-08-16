@@ -1,10 +1,13 @@
 """Experiment: replay Ridge versus direct/low-rank/residual MLP evidence."""
 
-from experiment_core.legacy_evidence import LegacyEvidenceReplay
+from experiment_core.legacy_evidence import AggregateEvidenceExperiment
 
 
-def build_experiment() -> LegacyEvidenceReplay:
-    return LegacyEvidenceReplay(
-        experiment_ids=("fair-architecture-benchmark-v1",),
-        run_name="fair_architecture_evidence",
-    )
+class FairArchitectureExperiment(AggregateEvidenceExperiment):
+    name = "fair_architecture_evidence"
+    description = "Replay the fair architecture benchmark aggregates."
+    evidence_ids = ("fair-architecture-benchmark-v1",)
+
+
+def build_experiment() -> FairArchitectureExperiment:
+    return FairArchitectureExperiment()
